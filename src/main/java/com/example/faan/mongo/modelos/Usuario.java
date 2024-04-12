@@ -27,10 +27,11 @@ public class Usuario implements UserDetails {
     private String apellido;
     private String direccion;
     private String telefono;
+    private String email;
 
     private Role role;
 
-    public Usuario(String nombre, String username, String password, String dni, String apellido, String direccion, String telefono, Role role) {
+    public Usuario(String nombre, String username, String password, String dni, String apellido, String direccion, String telefono,String email, Role role) {
         this.nombre = nombre;
         this.username = username;
         this.password = password;
@@ -38,6 +39,7 @@ public class Usuario implements UserDetails {
         this.apellido = apellido;
         this.direccion = direccion;
         this.telefono = telefono;
+        this.email = email;
         this.role = role;
     }
 
