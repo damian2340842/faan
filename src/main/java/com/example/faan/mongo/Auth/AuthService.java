@@ -50,7 +50,7 @@ public class AuthService {
     }
     public AuthResponse register(RegisterRequest request){
         Usuario usuario=Usuario.builder()
-                .username(request.getEmail())
+                .username(request.getUsername())
                 .password(passwordEncoder.encode( request.getPassword()))
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
@@ -63,9 +63,9 @@ public class AuthService {
                 .build();
     }
 
-    public boolean isEmailAlreadyRegistered(String email) {
+    public boolean isusernameAlreadyRegistered(String username) {
         // Realiza la consulta en la base de datos para verificar si existe un usuario con el mismo correo electrónico
-        Optional<Usuario> userOptional = usuarioRepository.findByUsername(email);
+        Optional<Usuario> userOptional = usuarioRepository.findByUsername(username);
         return userOptional.isPresent();
     }
 
