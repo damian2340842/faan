@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -22,7 +23,8 @@ public class UsuarioService {
     }
 
     public Usuario findByUsername(String username) {
-        return usuarioRepository.findByUsername(username);
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByUsername(username);
+        return optionalUsuario.orElse(null); // O manejarlo de otra manera si prefieres
     }
 
     public List<Usuario> findAllUsuarios() {

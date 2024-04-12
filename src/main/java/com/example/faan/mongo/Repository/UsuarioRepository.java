@@ -7,11 +7,12 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 
-    Usuario findByUsername(String username);
-    // Puedes agregar métodos de consulta adicionales según tus necesidades
+    Optional<Usuario> findByUsername(String username);
 
+    // Puedes agregar métodos de consulta adicionales según tus necesidades
 
     Usuario findByDniAndUsername(String dni, String username);
     Usuario findByVerificationToken(String verificationToken);
+
 
 }
