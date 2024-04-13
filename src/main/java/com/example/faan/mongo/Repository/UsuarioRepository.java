@@ -15,4 +15,14 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     Usuario findByVerificationToken(String verificationToken);
 
 
+
+
+
+
+    public Usuario findByEmail(String email);
+
+    public Usuario findByTokenPassword(String tokenPassword);
+
+
+
 }

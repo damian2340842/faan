@@ -31,6 +31,8 @@ public class Usuario implements UserDetails {
 
     private Role role;
 
+    private String tokenPassword;
+
     public Usuario(String nombre, String username, String password, String dni, String apellido, String direccion, String telefono,String email, Role role) {
         this.nombre = nombre;
         this.username = username;
