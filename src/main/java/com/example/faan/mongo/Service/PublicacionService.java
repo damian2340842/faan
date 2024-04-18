@@ -38,7 +38,7 @@ public class PublicacionService {
             publicacion.setNombre(nuevaPublicacion.getNombre());
             publicacion.setRaza(nuevaPublicacion.getRaza());
             publicacion.setSexo(nuevaPublicacion.getSexo());
-            publicacion.setDescripcion_especifica(nuevaPublicacion.getDescripcion_especifica());
+            publicacion.setDescripcionEspecifica(nuevaPublicacion.getDescripcionEspecifica());
             publicacion.setUbicacion(nuevaPublicacion.getUbicacion());
             publicacion.setFoto(nuevaPublicacion.getFoto());
             publicacion.setFecha(nuevaPublicacion.getFecha());
@@ -53,4 +53,6 @@ public class PublicacionService {
     public void eliminarPublicacion(Long id) {
         publicacionRepository.deleteById(id);
     }
+
+
 }
