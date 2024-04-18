@@ -15,8 +15,7 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder; // Este bean se define en SecurityConfig
-
+    private BCryptPasswordEncoder passwordEncoder; 
     public Usuario saveUsuario(Usuario usuario) {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
