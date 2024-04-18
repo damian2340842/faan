@@ -32,13 +32,9 @@ public class PasswordController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
         }
 
-        // Generar y guardar un token de verificación (puedes implementar tu propia lógica para generar un token único)
         String verificationToken = generateVerificationToken();
         usuario.setVerificationToken(verificationToken);
         usuarioRepository.save(usuario);
-
-        // Enviar el token de verificación al usuario (puedes implementar tu propia lógica de envío de correo electrónico aquí)
-
         return ResponseEntity.ok("vtoken:" + verificationToken);
     }
 
@@ -59,9 +55,6 @@ public class PasswordController {
     }
 
     private String generateVerificationToken() {
-        // Implementa tu lógica para generar un token de verificación único aquí
-        // Puede ser una combinación de letras, números y caracteres especiales
-        // Puedes utilizar bibliotecas como UUID para generar tokens únicos
         return UUID.randomUUID().toString();
     }
 }
