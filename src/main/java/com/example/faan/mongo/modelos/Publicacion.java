@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Document(collection = "Publicaciones")
 public class Publicacion  {
+    //damian gay
     @Id
     private Long id;
     private String nombre;
