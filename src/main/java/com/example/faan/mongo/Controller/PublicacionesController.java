@@ -6,6 +6,7 @@ import com.example.faan.mongo.modelos.Publicacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,10 @@ public class PublicacionesController {
     @Autowired
     private PublicacionService publicacionService;
 
-
+    private final SimpMessagingTemplate messagingTemplate;
+    public PublicacionesController(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
     @GetMapping(path = "/listarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> getPublicaciones() {
@@ -41,6 +45,8 @@ public class PublicacionesController {
             // Guardar la publicación
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
+                messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
+
                 return ResponseEntity.status(HttpStatus.CREATED).body("Publicación creada exitosamente");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
