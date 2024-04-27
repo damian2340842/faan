@@ -16,7 +16,7 @@ public class Publicacion  {
     private String nombre;
     private String raza;
     private String sexo;
-    private String descripcionEspecifica;
+    private String descripcion_especifica;
     private String Fecha;
     private String Ubicacion;
     private String Foto;
