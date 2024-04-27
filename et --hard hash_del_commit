@@ -1,0 +1,99 @@
+[33mcommit e61ce78cf86f34d1ed420baf0f565e2ddea8321a[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: damian2340842 <123527681+damian2340842@users.noreply.github.com>
+Date:   Fri Apr 26 23:25:34 2024 -0500
+
+    Revert "Controller Publicacioness:P"
+    
+    This reverts commit 1286b00c0d1b6c93b346207a9c388b7698621222.
+    
+    # Conflicts:
+    #       src/main/java/com/example/faan/mongo/Controller/PublicacionesController.java
+
+[33mcommit 54e49e958e9fda00415bb3d02e725508ab60036c[m
+Author: damian2340842 <123527681+damian2340842@users.noreply.github.com>
+Date:   Fri Apr 26 22:58:10 2024 -0500
+
+    Revert "up"
+    
+    This reverts commit e543b309213d4e1fa621b153e461f9dd0e45fb88.
+
+[33mcommit 3462720fd54797903dac436c581b3a3725416c88[m
+Author: damian2340842 <123527681+damian2340842@users.noreply.github.com>
+Date:   Sat Apr 20 23:28:48 2024 -0500
+
+    websockets eealizado creo
+
+[33mcommit e543b309213d4e1fa621b153e461f9dd0e45fb88[m
+Author: ADRVDJ <adrian.cajamarca.est@tecazuay.edu.ec>
+Date:   Thu Apr 18 22:19:58 2024 -0500
+
+    up
+
+[33mcommit 1286b00c0d1b6c93b346207a9c388b7698621222[m
+Author: Daisy Lalvay <153593753+tatianalvy@users.noreply.github.com>
+Date:   Thu Apr 18 00:45:29 2024 -0500
+
+    Controller Publicacioness:P
+
+[33mcommit 1b5a1a1168ce78d7ae69f89aee752a52eea66c73[m
+Author: ADRVDJ <adrian.cajamarca.est@tecazuay.edu.ec>
+Date:   Wed Apr 17 23:49:13 2024 -0500
+
+    Listo publicaciones
+
+[33mcommit f5a8bf58327faee0962c6365b9087e91cef30043[m
+Merge: 6e4b9a5 d1f2047
+Author: damian2340842 <123527681+damian2340842@users.noreply.github.com>
+Date:   Wed Apr 17 22:01:18 2024 -0500
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 6e4b9a54142b505d16fdf434cab911538b4c2aeb[m
+Author: damian2340842 <123527681+damian2340842@users.noreply.github.com>
+Date:   Wed Apr 17 22:00:49 2024 -0500
+
+    aaa
+
+[33mcommit d1f2047b41a6f9a437799d6fa584a24a45d2140b[m[33m ([m[1;31morigin/tatys[m[33m, [m[1;31morigin/michus[m[33m, [m[1;31morigin/dany[m[33m, [m[1;31morigin/damian[m[33m, [m[1;31morigin/carla[m[33m)[m
+Author: Daisy Lalvay <153593753+tatianalvy@users.noreply.github.com>
+Date:   Wed Apr 17 21:16:56 2024 -0500
+
+    server
+
+[33mcommit 21a29142d17d13464f55caf8d92e9eb3dd5c2e01[m
+Author: DannyJ2001 <108770227+DannyJ2001@users.noreply.github.com>
+Date:   Sat Apr 13 02:24:34 2024 -0500
+
+    emailRecover
+    
+    Recuperar Contraseña
+
+[33mcommit f20524155e73d3b53748161526b1533ee32ddfff[m
+Author: Daisy Lalvay <153593753+tatianalvy@users.noreply.github.com>
+Date:   Fri Apr 12 18:39:58 2024 -0500
+
+    Ya se ven los otros dts
+
+[33mcommit 61c9f6eab55d0984d70e55b4e46b46d1cd176f2e[m
+Author: Daisy Lalvay <153593753+tatianalvy@users.noreply.github.com>
+Date:   Fri Apr 12 18:05:30 2024 -0500
+
+    Modificaion
+
+[33mcommit bd73a662bcca9807812ac77bf168708c13c98d69[m
+Author: damian2340842 <123527681+damian2340842@users.noreply.github.com>
+Date:   Fri Apr 12 17:20:03 2024 -0500
+
+    cambie emeil por username
+
+[33mcommit 37cf9cb5430600fe5c755552e60b0041f89a9c37[m
+Author: damian2340842 <123527681+damian2340842@users.noreply.github.com>
+Date:   Fri Apr 12 13:01:26 2024 -0500
+
+    valiendo
+
+[33mcommit 79ca765d958febe67acb332bf20c903f9e9a7bb3[m
+Author: damian2340842 <123527681+damian2340842@users.noreply.github.com>
+Date:   Fri Apr 12 10:40:53 2024 -0500
+
+    Initial commit

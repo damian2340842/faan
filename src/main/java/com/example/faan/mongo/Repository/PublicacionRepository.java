@@ -10,10 +10,11 @@ import java.util.Optional;
 @Repository
 public interface PublicacionRepository extends MongoRepository<Publicacion, Long> {
 
-    List<Publicacion> findByAutor(String autor);
+    List<Publicacion> findByNombre(String nombre);
 
     Optional<Publicacion> findById(Long id);
 
-    List<Publicacion> findByContenidoContaining(String contenido);
+    List<Publicacion> findByDescripcionEspecifica(String descripcionEspecifica);
+
 
 }
