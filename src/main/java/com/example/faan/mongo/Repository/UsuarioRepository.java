@@ -11,7 +11,7 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 
     // Puedes agregar métodos de consulta adicionales según tus necesidades
 
-    Usuario findByDniAndUsername(String dni, String username);
+    Usuario findByEmailAndUsername(String email, String username);
     Usuario findByVerificationToken(String verificationToken);
 
 

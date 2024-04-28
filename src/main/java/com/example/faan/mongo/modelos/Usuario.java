@@ -23,7 +23,6 @@ public class Usuario implements UserDetails {
     private String nombre;
     private String username;
     private String password;
-    private String dni;
     private String apellido;
     private String direccion;
     private String telefono;
@@ -33,11 +32,10 @@ public class Usuario implements UserDetails {
 
     private String tokenPassword;
 
-    public Usuario(String nombre, String username, String password, String dni, String apellido, String direccion, String telefono,String email, Role role) {
+    public Usuario(String nombre, String username, String password, String apellido, String direccion, String telefono,String email, Role role) {
         this.nombre = nombre;
         this.username = username;
         this.password = password;
-        this.dni = dni;
         this.apellido = apellido;
         this.direccion = direccion;
         this.telefono = telefono;

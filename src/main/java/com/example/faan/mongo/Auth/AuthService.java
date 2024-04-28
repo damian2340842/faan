@@ -54,8 +54,10 @@ public class AuthService {
                 .password(passwordEncoder.encode( request.getPassword()))
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
-                .dni(request.getDni())
                 .role(request.getRole())//desde el Enum
+                .email(request.getEmail())
+                .direccion(request.getDireccion())
+                .telefono(request.getTelefono())
                 .build();
         usuarioRepository.save(usuario);
         return AuthResponse.builder()

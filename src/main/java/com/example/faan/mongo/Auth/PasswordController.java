@@ -25,9 +25,9 @@ public class PasswordController {
     private UsuarioRepository usuarioRepository;
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyUser(@RequestParam String dni, @RequestParam String username) {
+    public ResponseEntity<String> verifyUser(@RequestParam String email, @RequestParam String username) {
         // Buscar usuario por DNI y nombre de usuario
-        Usuario usuario = usuarioRepository.findByDniAndUsername(dni, username);
+        Usuario usuario = usuarioRepository.findByEmailAndUsername(email, username);
         if (usuario == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
         }

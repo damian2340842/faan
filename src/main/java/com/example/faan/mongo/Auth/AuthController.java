@@ -5,6 +5,8 @@ import com.example.faan.mongo.modelos.AuthResponse;
 import com.example.faan.mongo.modelos.LoginRequest;
 import com.example.faan.mongo.modelos.RegisterRequest;
 import com.example.faan.mongo.modelos.Usuario;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,4 +62,9 @@ public class AuthController {
         }
         return ResponseEntity.ok(authService.register(request));
     }
+    @PostMapping("/signout")
+    public ResponseEntity<String> signOut(HttpServletRequest request, HttpServletResponse response) {
+        request.getSession().invalidate();
+        return ResponseEntity.ok("Sesión cerrada correctamente.");
+}
 }
