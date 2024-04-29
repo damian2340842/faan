@@ -58,6 +58,8 @@ public class AuthController {
 
         return ResponseEntity.ok(authResponse);
     }
+
+    
     @PostMapping("/signin2")
     public ResponseEntity<AuthResponse> movilSignIn2(@RequestBody LoginRequest loginRequest) {
         try {

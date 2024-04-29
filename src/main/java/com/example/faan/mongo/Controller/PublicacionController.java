@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/publicaciones")
@@ -60,16 +61,26 @@ public class PublicacionController {
         }
     }
 
-    @DeleteMapping("/eliminar/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+
+
+    @DeleteMapping(path = "/eliminar/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> eliminarPublicacion(@PathVariable Long id) {
         try {
-            publicacionService.eliminarPublicacion(id);
-            return ResponseEntity.ok("Publicación eliminada exitosamente");
+            Optional<Publicacion> publicacionOptional = publicacionService.obtenerPublicacionPorId(id);
+            if (!publicacionOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación con el ID: " + id);
+            }
+
+            this.publicacionService.eliminarPublicacion(id);
+
+            return ResponseEntity.status(HttpStatus.OK).body("Publicación eliminada exitosamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación");
         }
     }
+
+
 
     @GetMapping("/buscar/{id}")
     public ResponseEntity<Publicacion> buscarPublicacionPorId(@PathVariable Long id) {
