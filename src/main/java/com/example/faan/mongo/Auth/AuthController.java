@@ -67,4 +67,7 @@ public class AuthController {
         request.getSession().invalidate();
         return ResponseEntity.ok("Sesión cerrada correctamente.");
 }
+
+
+
 }

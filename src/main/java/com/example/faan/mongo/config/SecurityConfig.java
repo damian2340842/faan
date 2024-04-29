@@ -38,7 +38,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
         return http
                 .csrf(csrf ->csrf.disable())// Deshabilita CSRF para simplificar el ejemplo, debes considerar habilitarlo en un entorno de producción
-                .authorizeHttpRequests(authRequest ->authRequest.requestMatchers("/auth/**").permitAll()
+                .authorizeHttpRequests(authRequest ->authRequest.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 )// Requiere autenticación para todas las demás URL
                 .sessionManagement(sessionManager->
@@ -48,9 +48,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
-
-
 
 
 

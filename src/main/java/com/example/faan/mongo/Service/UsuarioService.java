@@ -17,7 +17,6 @@ public class UsuarioService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder; 
     public Usuario saveUsuario(Usuario usuario) {
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 

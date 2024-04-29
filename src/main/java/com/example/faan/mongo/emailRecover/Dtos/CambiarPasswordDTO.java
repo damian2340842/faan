@@ -1,6 +1,7 @@
 package com.example.faan.mongo.emailRecover.Dtos;
 
-import javax.validation.constraints.NotBlank;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,5 @@ public class CambiarPasswordDTO {
     private String passwordr;
     @NotBlank
     private String token;
-
 
 }

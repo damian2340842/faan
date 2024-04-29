@@ -9,6 +9,7 @@ import com.example.faan.mongo.emailRecover.MessageCode.Message;
 import com.example.faan.mongo.emailRecover.Services.EmailServiceImpl;
 import com.example.faan.mongo.modelos.Usuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Random;
+
 
 @CrossOrigin(origins = {"http://localhost:4200", "http://10.0.2.2:8080"})
 @RestController
@@ -51,8 +52,9 @@ public class EmailController {
             values.setMailTo(usuario.getEmail());
             values.setUsername(usuario.getNombre()  + ' ' + usuario.getApellido());
             values.setSubject("RESTAURAR CONSTRASEÑA");
-            UUID uuid = UUID.randomUUID();
-            String tokenPassword  = uuid.toString();
+
+            String tokenPassword = generateRandomNumericToken(5);
+
             values.setJwt(tokenPassword);
             usuario.setTokenPassword(tokenPassword);
 
@@ -108,4 +110,15 @@ public class EmailController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+
+    private String generateRandomNumericToken(int length) {
+        StringBuilder token = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            token.append(random.nextInt(10)); // Añadir un dígito aleatorio
+        }
+        return token.toString();
+    }
+
 }

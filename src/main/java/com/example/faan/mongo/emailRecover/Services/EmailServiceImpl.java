@@ -54,7 +54,7 @@ public class EmailServiceImpl implements EmailService {
 
     public void enviarCorreo(String nombre, String correo, String asunto, String mensaje) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        String destinatario = "ccontinuasista@gmail.com"; // Destinatario fijo
+        String destinatario = "faanproteccionanimal@gmail.com"; // Destinatario fijo
         mailMessage.setTo(destinatario);
         mailMessage.setSubject(asunto);
         mailMessage.setText("Nombre: " + nombre + "\nCorreo: " + correo + "\nMensaje: " + mensaje);
