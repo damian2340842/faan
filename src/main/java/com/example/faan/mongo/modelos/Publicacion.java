@@ -19,7 +19,7 @@ public class Publicacion  {
     private String descripcionEspecifica;
     private String Fecha;
     private String Ubicacion;
-    private String Foto;
+    private byte[]  Foto;
 
     // Getters y Setters
     public Long getId() {
@@ -78,14 +78,15 @@ public class Publicacion  {
         Ubicacion = ubicacion;
     }
 
-    public String getFoto() {
+    public byte[] getFoto() {
         return Foto;
     }
 
-    public void setFoto(String foto) {
+    public void setFoto(byte[] foto) {
         Foto = foto;
     }
-    public Publicacion(Long id, String nombre, String raza, String sexo, String descripcionEspecifica, String fecha, String ubicacion, String foto) {
+
+    public Publicacion(Long id, String nombre, String raza, String sexo, String descripcionEspecifica, String fecha, String ubicacion, byte[] foto) {
         this.id = id;
         this.nombre = nombre;
         this.raza = raza;
