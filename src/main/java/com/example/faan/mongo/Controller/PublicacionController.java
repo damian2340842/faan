@@ -34,13 +34,18 @@ public class PublicacionController {
         }
     }
 
-    @PostMapping(   "/guardar")
+    @PostMapping(path = "/guardarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<String> guardarPublicacion(@Valid @RequestBody Publicacion publicacion) {
+    public ResponseEntity<String> registrarPublicaciones(@RequestBody Publicacion publicacion) {
         try {
+            if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
+            }
+
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
+
                 return ResponseEntity.status(HttpStatus.CREATED).body("Publicación creada exitosamente");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
