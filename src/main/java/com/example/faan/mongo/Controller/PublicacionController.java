@@ -33,7 +33,7 @@ public class PublicacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
+//Prueba
     @PostMapping(path = "/guardarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> registrarPublicaciones(@RequestBody Publicacion publicacion) {
