@@ -32,29 +32,6 @@ public class Usuario implements UserDetails {
 
     private String tokenPassword;
 
-    public Usuario(String nombre, String username, String password, String apellido, String direccion, String telefono,String email, Role role) {
-        this.nombre = nombre;
-        this.username = username;
-        this.password = password;
-        this.apellido = apellido;
-        this.direccion = direccion;
-        this.telefono = telefono;
-        this.email = email;
-        this.role = role;
-    }
-
-    // Getters y setters
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
