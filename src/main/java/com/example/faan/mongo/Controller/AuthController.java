@@ -13,6 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/auth")
@@ -28,20 +32,22 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> movilSignIn(@RequestBody LoginRequest loginRequest) {
-        try{
-        AuthResponse authResponse = authService.login(loginRequest);
-        Usuario usuario = usuarioRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new RuntimeException("usuario not found"));
+    public ResponseEntity<Map<String, String>> movilSignIn(@RequestBody LoginRequest loginRequest) {
+        try {
+            AuthResponse authResponse = authService.login(loginRequest);
+            Usuario usuario = usuarioRepository.findByUsername(loginRequest.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            if (authResponse == null) {
+            if (authResponse == null || authResponse.getToken() == null) {
                 throw new RuntimeException("Error al iniciar sesión");
             }
-        authResponse.setUsuario(usuario);
-        return ResponseEntity.ok(authResponse);
-        }catch (Exception e) {
 
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Credenciales incorrectas", null));
+            Map<String, String> response = new HashMap<>();
+            response.put("token", authResponse.getToken());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Credenciales incorrectas"));
         }
     }
 
