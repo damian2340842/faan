@@ -27,10 +27,13 @@ public class PublicacionService {
                 .nombre(publicacion1.getNombre())
                 .raza(publicacion1.getRaza())
                 .sexo(publicacion1.getSexo())
+                .tipoAnimal(publicacion1.getTipoAnimal())
                 .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
-                .Ubicacion(publicacion1.getUbicacion())
-                .Fecha(publicacion1.getFecha())
-                .Foto(publicacion1.getFoto())
+                .tipoPublicacion(publicacion1.getTipoPublicacion())
+                .fecha(publicacion1.getFecha())
+                .ubicacion(publicacion1.getUbicacion())
+                .estadoRescatado(publicacion1.getEstadoRescatado())
+                .foto(publicacion1.getFoto())
                 .build();
         return publicacionRepository.save(publicacion);
     }
@@ -55,9 +58,10 @@ public class PublicacionService {
             publicacion.setRaza(nuevaPublicacion.getRaza());
             publicacion.setSexo(nuevaPublicacion.getSexo());
             publicacion.setDescripcionEspecifica(nuevaPublicacion.getDescripcionEspecifica());
-            publicacion.setUbicacion(nuevaPublicacion.getUbicacion());
-            publicacion.setFoto(nuevaPublicacion.getFoto());
             publicacion.setFecha(nuevaPublicacion.getFecha());
+            publicacion.setUbicacion(nuevaPublicacion.getUbicacion());
+            publicacion.setEstadoRescatado(nuevaPublicacion.getEstadoRescatado());
+            publicacion.setFoto(nuevaPublicacion.getFoto());
             // Puedes agregar aquí más campos para actualizar si tienes más campos en el modelo de publicación.
             return publicacionRepository.save(publicacion);
         } else {

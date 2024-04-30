@@ -37,7 +37,7 @@ public class PublicacionController {
 //Prueba
     @PostMapping(path = "/guardarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<String> registrarPublicaciones(@RequestBody Publicacion publicacion) {
+    public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
         try {
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");

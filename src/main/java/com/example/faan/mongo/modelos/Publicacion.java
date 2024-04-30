@@ -22,9 +22,10 @@ public class Publicacion  {
     private TipoAnimal tipoAnimal;
     private TipoPublicacion tipoPublicacion;
     private String descripcionEspecifica;
-    private String Fecha;
-    private String Ubicacion;
-    private byte[]  Foto;
+    private String fecha;
+    private String ubicacion;
+    private Boolean estadoRescatado;
+    private byte[]  foto;
 
 
 }
