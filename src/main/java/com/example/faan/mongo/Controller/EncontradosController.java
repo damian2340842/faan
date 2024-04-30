@@ -4,10 +4,11 @@ import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.TipoPublicacion;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -15,43 +16,21 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/publicaciones")
-public class PublicacionController {
-
+public class EncontradosController {
     private final PublicacionService publicacionService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public PublicacionController(PublicacionService publicacionService, SimpMessagingTemplate messagingTemplate) {
+    public EncontradosController(PublicacionService publicacionService, SimpMessagingTemplate messagingTemplate) {
         this.publicacionService = publicacionService;
         this.messagingTemplate = messagingTemplate;
     }
-
-    @GetMapping("/listar")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<List<Publicacion>> listarPublicaciones() {
-        try {
-            List<Publicacion> publicaciones = publicacionService.obtenerTodasLasPublicaciones();
-            return ResponseEntity.ok(publicaciones);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    @GetMapping("/listar/encontradas")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {
+        List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
+        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesEncontradas);
+        return ResponseEntity.ok(publicacionesEncontradasFiltradas);
     }
-    @GetMapping("/listar/perdidas")
-    public ResponseEntity<List<Publicacion>> listarPublicacionesPerdidas() {
-        List<Publicacion> publicacionesPerdidas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
-        List<Publicacion> publicacionesPerdidasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesPerdidas);
-        return ResponseEntity.ok(publicacionesPerdidasFiltradas);
-    }
-
-
-
-    @GetMapping("/listar/adopcion")
-    public ResponseEntity<List<Publicacion>> listarPublicacionesAdopcion() {
-        List<Publicacion> publicacionesAdopcion = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ADOPCION);
-        List<Publicacion> publicacionesAdopcionFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesAdopcion);
-        return ResponseEntity.ok(publicacionesAdopcionFiltradas);
-    }
-//Prueba
-    @PostMapping(path = "/guardarPublicaciones")
+    @PostMapping(path = "/guardarPublicacionesEncontrados")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
         try {
@@ -59,11 +38,13 @@ public class PublicacionController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
             }
 
+            // Establecer el tipo de publicación como "ENCONTRADO" por defecto
+            publicacion.setTipoPublicacion(TipoPublicacion.ENCONTRADO);
+
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
-
-                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación creada exitosamente");
+                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación tipo encontrado creada exitosamente");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
             }
@@ -72,7 +53,7 @@ public class PublicacionController {
         }
     }
 
-    @PutMapping("/actualizar/{id}")
+    @PutMapping("/actualizarEncontradas/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
@@ -85,7 +66,7 @@ public class PublicacionController {
 
 
 
-    @DeleteMapping(path = "/eliminar/{id}")
+    @DeleteMapping(path = "/eliminarEncontradas/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> eliminarPublicacion(@PathVariable BigInteger id) {
         try {
@@ -104,7 +85,7 @@ public class PublicacionController {
 
 
 
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/buscarEncontradas/{id}")
     public ResponseEntity<Publicacion> buscarPublicacionPorId(@PathVariable BigInteger id) {
         try {
             Publicacion publicacion = publicacionService.obtenerPublicacionPorId(id)
@@ -119,3 +100,6 @@ public class PublicacionController {
         }
     }
 }
+
+
+
