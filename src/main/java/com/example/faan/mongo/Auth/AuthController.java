@@ -1,6 +1,7 @@
 package com.example.faan.mongo.Auth;
 
 import com.example.faan.mongo.Repository.UsuarioRepository;
+import com.example.faan.mongo.Service.CounterService;
 import com.example.faan.mongo.modelos.AuthResponse;
 import com.example.faan.mongo.modelos.LoginRequest;
 import com.example.faan.mongo.modelos.RegisterRequest;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -22,6 +24,8 @@ public class AuthController {
 
     private final AuthService authService;
         private final UsuarioRepository usuarioRepository;
+
+    private final CounterService counterService;
 ///opp
 
 //    @PostMapping("/v1/signin")
@@ -83,30 +87,28 @@ public class AuthController {
 
 
 
-    @PostMapping(value = "/register")
+    @PostMapping("/register")
     private ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         try {
             String username = request.getUsername();
-            String password = request.getPassword();
+            String email = request.getEmail();
 
-            if (username == null || username.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AuthResponse("El nombre de usuario no puede estar vacío", null));
-            }
-
-            if (password == null || password.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AuthResponse("La contraseña no puede estar vacía", null));
-            }
-
+            // Verificar si el nombre de usuario ya está registrado
             if (authService.isusernameAlreadyRegistered(username)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AuthResponse("Usuario " + username + " ya registrado", null));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new AuthResponse("El nombre de usuario ya está registrado", null));
             }
 
+
+            // Respuesta exitosa
             return ResponseEntity.ok(authService.register(request));
         } catch (Exception e) {
             // Manejo de excepciones
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthResponse("Error en el registro", null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new AuthResponse("Error en el registro", null));
         }
     }
+
 
 
 

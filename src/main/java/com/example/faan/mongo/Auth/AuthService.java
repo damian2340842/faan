@@ -1,6 +1,7 @@
 package com.example.faan.mongo.Auth;
 
 import com.example.faan.mongo.Repository.UsuarioRepository;
+import com.example.faan.mongo.Service.CounterService;
 import com.example.faan.mongo.jwt.JwtService;
 import com.example.faan.mongo.modelos.*;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 @Service
@@ -20,6 +22,8 @@ public class AuthService {
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+
+    private final CounterService counterService;
 
     public AuthResponse login(LoginRequest loginRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
@@ -49,7 +53,9 @@ public class AuthService {
                 .build();
     }
     public AuthResponse register(RegisterRequest request){
+        BigInteger newUserId = counterService.getNextSequence("usuario_id");
         Usuario usuario=Usuario.builder()
+                .id(newUserId)
                 .username(request.getUsername())
                 .password(passwordEncoder.encode( request.getPassword()))
                 .nombre(request.getNombre())

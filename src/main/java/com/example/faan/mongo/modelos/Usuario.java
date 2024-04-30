@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,7 +20,7 @@ import java.util.List;
 @Document(collection = "usuarios")
 public class Usuario implements UserDetails {
     @Id
-    private String id;
+    private BigInteger id;
     private String verificationToken;
     private String nombre;
     private String username;
@@ -56,4 +58,5 @@ public class Usuario implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
 }
