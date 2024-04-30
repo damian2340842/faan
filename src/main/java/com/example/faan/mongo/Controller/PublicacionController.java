@@ -38,19 +38,22 @@ public class PublicacionController {
     @GetMapping("/listar/perdidas")
     public ResponseEntity<List<Publicacion>> listarPublicacionesPerdidas() {
         List<Publicacion> publicacionesPerdidas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
-        return ResponseEntity.ok(publicacionesPerdidas);
+        List<Publicacion> publicacionesPerdidasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesPerdidas);
+        return ResponseEntity.ok(publicacionesPerdidasFiltradas);
     }
 
     @GetMapping("/listar/encontradas")
     public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {
         List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
-        return ResponseEntity.ok(publicacionesEncontradas);
+        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesEncontradas);
+        return ResponseEntity.ok(publicacionesEncontradasFiltradas);
     }
 
     @GetMapping("/listar/adopcion")
     public ResponseEntity<List<Publicacion>> listarPublicacionesAdopcion() {
         List<Publicacion> publicacionesAdopcion = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ADOPCION);
-        return ResponseEntity.ok(publicacionesAdopcion);
+        List<Publicacion> publicacionesAdopcionFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesAdopcion);
+        return ResponseEntity.ok(publicacionesAdopcionFiltradas);
     }
 //Prueba
     @PostMapping(path = "/guardarPublicaciones")

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,5 +81,13 @@ public class PublicacionService {
     public List<Publicacion> obtenerPublicacionesPorEstado(boolean estadoRescatado) {
         return publicacionRepository.findByEstadoRescatado(estadoRescatado);
     }
-
+    public List<Publicacion> publicacionesConEstadoTrue(List<Publicacion> publicaciones) {
+        List<Publicacion> publicacionesFiltradas = new ArrayList<>();
+        for (Publicacion publicacion : publicaciones) {
+            if (Boolean.TRUE.equals(publicacion.getEstadoRescatado())) {
+                publicacionesFiltradas.add(publicacion);
+            }
+        }
+        return publicacionesFiltradas;
+    }
 }
