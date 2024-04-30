@@ -11,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.example.faan.mongo.modelos.AuthResponse;
+
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -36,12 +38,12 @@ public class AuthService {
     }
 
 
-    public AuthResponse register(Usuario request){
+    public AuthResponse register(Usuario request) {
         BigInteger newUserId = counterService.getNextSequence("usuario_id");
-        Usuario usuario=Usuario.builder()
+        Usuario usuario = Usuario.builder()
                 .id(newUserId)
                 .username(request.getUsername())
-                .password(passwordEncoder.encode( request.getPassword()))
+                .password(passwordEncoder.encode(request.getPassword()))
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
                 .role(request.getRole())
@@ -51,12 +53,19 @@ public class AuthService {
                 .foto(request.getFoto())
                 .build();
         usuarioRepository.save(usuario);
+
+        String token = jwtService.getToken(usuario); // Obtener el token JWT
+
+        // Crear un objeto AuthResponseDTO con el token y el nombre de usuario
         return AuthResponse.builder()
-                .token(jwtService.getToken(usuario))
+                .token(token)
+                .username(usuario.getUsername()) // Usar el método getter generado por Lombok
                 .build();
     }
 
-    public boolean isusernameAlreadyRegistered(String username) {
+
+
+        public boolean isusernameAlreadyRegistered(String username) {
         Optional<Usuario> userOptional = usuarioRepository.findByUsername(username);
         return userOptional.isPresent();
     }
