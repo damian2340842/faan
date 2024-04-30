@@ -4,6 +4,7 @@ import com.example.faan.mongo.modelos.Publicacion;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,9 +13,10 @@ public interface PublicacionRepository extends MongoRepository<Publicacion, Long
 
     List<Publicacion> findByNombre(String nombre);
 
-    Optional<Publicacion> findById(Long id);
+    Optional<Publicacion> findById(BigInteger id);
 
     List<Publicacion> findByDescripcionEspecifica(String descripcionEspecifica);
+    void deleteById(BigInteger id);
 
 
 }

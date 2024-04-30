@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigInteger;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "Publicaciones")
 public class Publicacion  {
     @Id
-    private Long id;
+    private BigInteger id;
     private String nombre;
     private String raza;
     private String sexo;

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,23 +15,38 @@ public class PublicacionService {
 
     @Autowired
     private PublicacionRepository publicacionRepository;
+    @Autowired
+    private CounterService counterService;
 
 
     @Transactional
-    public Publicacion crearPublicacion(Publicacion publicacion) {
+    public Publicacion crearPublicacion(Publicacion publicacion1) {
+        BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
+        Publicacion publicacion = Publicacion.builder()
+                .id(nuevaPublicacionId)
+                .nombre(publicacion1.getNombre())
+                .raza(publicacion1.getRaza())
+                .sexo(publicacion1.getSexo())
+                .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
+                .Ubicacion(publicacion1.getUbicacion())
+                .Fecha(publicacion1.getFecha())
+                .Foto(publicacion1.getFoto())
+                .build();
         return publicacionRepository.save(publicacion);
     }
+
+
 
     public List<Publicacion> obtenerTodasLasPublicaciones() {
         return publicacionRepository.findAll();
     }
 
-    public Optional<Publicacion> obtenerPublicacionPorId(Long id) {
+    public Optional<Publicacion> obtenerPublicacionPorId(BigInteger id) {
         return publicacionRepository.findById(id);
     }
 
     @Transactional
-    public Publicacion actualizarPublicacion(Long id, Publicacion nuevaPublicacion) {
+    public Publicacion actualizarPublicacion(BigInteger id, Publicacion nuevaPublicacion) {
         Optional<Publicacion> publicacionExistente = publicacionRepository.findById(id);
 
         if (publicacionExistente.isPresent()) {
@@ -48,11 +64,11 @@ public class PublicacionService {
             throw new IllegalArgumentException("Publicación con ID " + id + " no encontrada.");
         }
     }
-
     @Transactional
-    public void eliminarPublicacion(Long id) {
+    public void eliminarPublicacion(BigInteger id) {
         publicacionRepository.deleteById(id);
-}
+    }
+
 
 
 }

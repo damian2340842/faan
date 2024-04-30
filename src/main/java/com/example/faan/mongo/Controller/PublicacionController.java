@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,7 @@ public class PublicacionController {
 
     @PutMapping("/actualizar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> actualizarPublicacion(@PathVariable Long id, @Valid @RequestBody Publicacion publicacion) {
+    public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
             publicacionService.actualizarPublicacion(id, publicacion);
             return ResponseEntity.ok("Publicación actualizada exitosamente");
@@ -70,7 +71,7 @@ public class PublicacionController {
 
     @DeleteMapping(path = "/eliminar/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<String> eliminarPublicacion(@PathVariable Long id) {
+    public ResponseEntity<String> eliminarPublicacion(@PathVariable BigInteger id) {
         try {
             Optional<Publicacion> publicacionOptional = publicacionService.obtenerPublicacionPorId(id);
             if (!publicacionOptional.isPresent()) {
@@ -88,7 +89,7 @@ public class PublicacionController {
 
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<Publicacion> buscarPublicacionPorId(@PathVariable Long id) {
+    public ResponseEntity<Publicacion> buscarPublicacionPorId(@PathVariable BigInteger id) {
         try {
             Publicacion publicacion = publicacionService.obtenerPublicacionPorId(id)
                     .orElse(null);
