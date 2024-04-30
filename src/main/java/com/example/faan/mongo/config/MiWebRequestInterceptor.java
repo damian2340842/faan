@@ -14,12 +14,10 @@ public class MiWebRequestInterceptor implements WebRequestInterceptor {
     public void preHandle(WebRequest request) throws Exception {
         HttpServletRequest servletRequest = ((ServletWebRequest) request).getRequest();
         HttpServletResponse servletResponse = ((ServletWebRequest) request).getResponse();
-        // Lógica antes de manejar la solicitud
     }
 
     @Override
     public void postHandle(WebRequest request, ModelMap model) throws Exception {
-        // Lógica después de manejar la solicitud, antes de renderizar la vista
     }
 
     @Override

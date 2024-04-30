@@ -1,13 +1,13 @@
-package com.example.faan.mongo.Auth;
+package com.example.faan.mongo.Service;
 
 import com.example.faan.mongo.Repository.UsuarioRepository;
-import com.example.faan.mongo.Service.CounterService;
 import com.example.faan.mongo.jwt.JwtService;
-import com.example.faan.mongo.modelos.*;
+import com.example.faan.mongo.modelos.AuthResponse;
+import com.example.faan.mongo.modelos.LoginRequest;
+import com.example.faan.mongo.modelos.Usuario;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,23 +35,7 @@ public class AuthService {
         .build();
     }
 
-    public AuthResponse loginAdmin(LoginRequest loginRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        UserDetails userDetails = usuarioRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow();
-        Usuario usuario = usuarioRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow();
 
-        if (!userDetails.getAuthorities().contains(new SimpleGrantedAuthority(Role.ADMIN.name()))) {
-            throw new RuntimeException("User is not an admin");
-        }
-
-        String token = jwtService.getToken(userDetails);
-        return AuthResponse.builder()
-                .token(token)
-                .usuario(usuario)
-                .build();
-    }
     public AuthResponse register(Usuario request){
         BigInteger newUserId = counterService.getNextSequence("usuario_id");
         Usuario usuario=Usuario.builder()
@@ -60,7 +44,7 @@ public class AuthService {
                 .password(passwordEncoder.encode( request.getPassword()))
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
-                .role(request.getRole())//desde el Enum
+                .role(request.getRole())
                 .email(request.getEmail())
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())
@@ -73,13 +57,8 @@ public class AuthService {
     }
 
     public boolean isusernameAlreadyRegistered(String username) {
-        // Realiza la consulta en la base de datos para verificar si existe un usuario con el mismo correo electrónico
         Optional<Usuario> userOptional = usuarioRepository.findByUsername(username);
         return userOptional.isPresent();
-    }
-
-    public String encriptaPass(String pass){
-        return passwordEncoder.encode(pass);
     }
 
 

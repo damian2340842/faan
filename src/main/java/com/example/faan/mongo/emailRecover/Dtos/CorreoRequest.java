@@ -1,5 +1,6 @@
 package com.example.faan.mongo.emailRecover.Dtos;
 
+
 public class CorreoRequest {
     private String destinatario;
     private String nombre;

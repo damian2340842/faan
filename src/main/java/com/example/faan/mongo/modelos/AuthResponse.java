@@ -13,5 +13,4 @@ public class AuthResponse {
     String token;
     Usuario usuario;
 
-
 }

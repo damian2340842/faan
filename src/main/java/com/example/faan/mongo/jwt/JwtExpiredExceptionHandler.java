@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class JwtExpiredExceptionHandler {
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<String> handleJwtExpiredException(ExpiredJwtException ex) {
-        // Aquí puedes personalizar la respuesta de acuerdo a tus necesidades
         String errorMessage = "El token JWT ha expirado " + ex.getMessage() ;
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMessage);
     }

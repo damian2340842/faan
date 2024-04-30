@@ -21,7 +21,7 @@ public class UsuarioService {
 
     public Usuario findByUsername(String username) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByUsername(username);
-        return optionalUsuario.orElse(null); // O manejarlo de otra manera si prefieres
+        return optionalUsuario.orElse(null);
     }
 
     public List<Usuario> findAllUsuarios() {
