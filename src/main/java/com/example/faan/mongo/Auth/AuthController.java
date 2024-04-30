@@ -25,66 +25,28 @@ public class AuthController {
         private final UsuarioRepository usuarioRepository;
 
     private final CounterService counterService;
-///opp
 
-//    @PostMapping("/v1/signin")
-//    public ResponseEntity<AuthResponse> signIn(@RequestBody LoginRequest loginRequest1) {
-//
-//        AuthResponse authResponse = authService.loginAdmin(loginRequest1);
-//        Usuario usuario = usuarioRepository.findByUsername(loginRequest1.getUsername())
-//                .orElseThrow(() -> new RuntimeException("Usuario not found"));
-//
-//        authResponse.setUsuario(usuario);
-//
-//        return ResponseEntity.ok(authResponse);
-//
-//    }
-//
-//    @PostMapping("/v0/signin")
-//    public ResponseEntity<AuthResponse> v0signIn(@RequestBody LoginRequest loginRequest) {
-//        try {
-//            return ResponseEntity.ok(authService.loginAdmin(loginRequest));
-//        } catch (Exception e) {
-//            // Manejo de excepciones
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthResponse("Error en el servidor", null));
-//        }
-//    }
 
 
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> movilSignIn(@RequestBody LoginRequest loginRequest) {
+        try{
         AuthResponse authResponse = authService.login(loginRequest);
         Usuario usuario = usuarioRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new RuntimeException("usuario not found"));
-
-        authResponse.setUsuario(usuario);
-
-        return ResponseEntity.ok(authResponse);
-    }
-
-
-    @PostMapping("/signin2")
-    public ResponseEntity<AuthResponse> movilSignIn2(@RequestBody LoginRequest loginRequest) {
-        try {
-            AuthResponse authResponse = authService.login(loginRequest);
-            String username = loginRequest.getUsername();
-            Usuario usuario = usuarioRepository.findByUsername(username)
-                    .orElseThrow(() -> new RuntimeException("Usuario not found"));
 
             if (authResponse == null) {
                 throw new RuntimeException("Error al iniciar sesión");
             }
 
-            authResponse.setUsuario(usuario);
+        authResponse.setUsuario(usuario);
 
-            return ResponseEntity.ok(authResponse);
+        return ResponseEntity.ok(authResponse);
         }catch (Exception e) {
             // Manejo de otras excepciones
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Credenciales incorrectas", null));
         }
     }
-
-
 
     @PostMapping("/register")
     private ResponseEntity<AuthResponse> register(@RequestBody Usuario usuario) {
