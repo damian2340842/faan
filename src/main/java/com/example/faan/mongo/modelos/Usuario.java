@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,6 +31,7 @@ public class Usuario implements UserDetails {
     private String direccion;
     private String telefono;
     private String email;
+    private byte[]  foto;
 
     private Role role;
 

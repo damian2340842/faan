@@ -52,7 +52,7 @@ public class AuthService {
                 .usuario(usuario)
                 .build();
     }
-    public AuthResponse register(RegisterRequest request){
+    public AuthResponse register(Usuario request){
         BigInteger newUserId = counterService.getNextSequence("usuario_id");
         Usuario usuario=Usuario.builder()
                 .id(newUserId)
@@ -64,6 +64,7 @@ public class AuthService {
                 .email(request.getEmail())
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())
+                .foto(request.getFoto())
                 .build();
         usuarioRepository.save(usuario);
         return AuthResponse.builder()

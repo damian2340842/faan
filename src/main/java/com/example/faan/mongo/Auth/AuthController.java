@@ -4,7 +4,6 @@ import com.example.faan.mongo.Repository.UsuarioRepository;
 import com.example.faan.mongo.Service.CounterService;
 import com.example.faan.mongo.modelos.AuthResponse;
 import com.example.faan.mongo.modelos.LoginRequest;
-import com.example.faan.mongo.modelos.RegisterRequest;
 import com.example.faan.mongo.modelos.Usuario;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -88,10 +87,10 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    private ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    private ResponseEntity<AuthResponse> register(@RequestBody Usuario usuario) {
         try {
-            String username = request.getUsername();
-            String email = request.getEmail();
+            String username = usuario.getUsername();
+            String email = usuario.getEmail();
 
             // Verificar si el nombre de usuario ya está registrado
             if (authService.isusernameAlreadyRegistered(username)) {
@@ -101,7 +100,7 @@ public class AuthController {
 
 
             // Respuesta exitosa
-            return ResponseEntity.ok(authService.register(request));
+            return ResponseEntity.ok(authService.register(usuario));
         } catch (Exception e) {
             // Manejo de excepciones
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
