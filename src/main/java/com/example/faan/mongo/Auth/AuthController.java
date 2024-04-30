@@ -54,38 +54,23 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> movilSignIn(@RequestBody LoginRequest loginRequest) {
+        try{
         AuthResponse authResponse = authService.login(loginRequest);
         Usuario usuario = usuarioRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new RuntimeException("usuario not found"));
-
-        authResponse.setUsuario(usuario);
-
-        return ResponseEntity.ok(authResponse);
-    }
-
-
-    @PostMapping("/signin2")
-    public ResponseEntity<AuthResponse> movilSignIn2(@RequestBody LoginRequest loginRequest) {
-        try {
-            AuthResponse authResponse = authService.login(loginRequest);
-            String username = loginRequest.getUsername();
-            Usuario usuario = usuarioRepository.findByUsername(username)
-                    .orElseThrow(() -> new RuntimeException("Usuario not found"));
 
             if (authResponse == null) {
                 throw new RuntimeException("Error al iniciar sesión");
             }
 
-            authResponse.setUsuario(usuario);
+        authResponse.setUsuario(usuario);
 
-            return ResponseEntity.ok(authResponse);
+        return ResponseEntity.ok(authResponse);
         }catch (Exception e) {
             // Manejo de otras excepciones
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthResponse("Credenciales incorrectas", null));
         }
     }
-
-
 
     @PostMapping("/register")
     private ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
