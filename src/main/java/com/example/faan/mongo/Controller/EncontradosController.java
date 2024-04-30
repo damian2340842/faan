@@ -27,9 +27,16 @@ public class EncontradosController {
     @GetMapping("/listar/encontradas")
     public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {
         List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
-        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesEncontradas);
+        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);
         return ResponseEntity.ok(publicacionesEncontradasFiltradas);
     }
+    @GetMapping("/listar/Rescatados")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesRescatados() {
+        List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
+        List<Publicacion> publicacionesEncontradasFiltradasR = publicacionService.publicacionesConEstadoTrue(publicacionesEncontradas);
+        return ResponseEntity.ok(publicacionesEncontradasFiltradasR);
+    }
+
     @PostMapping(path = "/guardarPublicacionesEncontrados")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
