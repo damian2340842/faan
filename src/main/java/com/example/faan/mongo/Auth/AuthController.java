@@ -26,30 +26,7 @@ public class AuthController {
         private final UsuarioRepository usuarioRepository;
 
     private final CounterService counterService;
-///opp
 
-//    @PostMapping("/v1/signin")
-//    public ResponseEntity<AuthResponse> signIn(@RequestBody LoginRequest loginRequest1) {
-//
-//        AuthResponse authResponse = authService.loginAdmin(loginRequest1);
-//        Usuario usuario = usuarioRepository.findByUsername(loginRequest1.getUsername())
-//                .orElseThrow(() -> new RuntimeException("Usuario not found"));
-//
-//        authResponse.setUsuario(usuario);
-//
-//        return ResponseEntity.ok(authResponse);
-//
-//    }
-//
-//    @PostMapping("/v0/signin")
-//    public ResponseEntity<AuthResponse> v0signIn(@RequestBody LoginRequest loginRequest) {
-//        try {
-//            return ResponseEntity.ok(authService.loginAdmin(loginRequest));
-//        } catch (Exception e) {
-//            // Manejo de excepciones
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthResponse("Error en el servidor", null));
-//        }
-//    }
 
 
     @PostMapping("/signin")
