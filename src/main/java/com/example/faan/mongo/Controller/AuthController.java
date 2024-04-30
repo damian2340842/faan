@@ -58,11 +58,14 @@ public class AuthController {
             String email = usuario.getEmail();
 
             if (authService.isusernameAlreadyRegistered(username)) {
+                // Aquí, en lugar de pasar null, deberías pasar el objeto Usuario existente.
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new AuthResponse("El nombre de usuario ya está registrado", null));
+                        .body(new AuthResponse("El nombre de usuario ya está registrado", username));
             }
 
             return ResponseEntity.ok(authService.register(usuario));
+
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new AuthResponse("Error en el registro", null));
