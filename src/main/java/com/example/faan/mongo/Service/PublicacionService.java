@@ -81,13 +81,22 @@ public class PublicacionService {
     public List<Publicacion> obtenerPublicacionesPorEstado(boolean estadoRescatado) {
         return publicacionRepository.findByEstadoRescatado(estadoRescatado);
     }
-    public List<Publicacion> publicacionesConEstadoTrue(List<Publicacion> publicaciones) {
+    public List<Publicacion> publicacionesConEstadoFalse(List<Publicacion> publicaciones) {
         List<Publicacion> publicacionesFiltradas = new ArrayList<>();
         for (Publicacion publicacion : publicaciones) {
-            if (Boolean.TRUE.equals(publicacion.getEstadoRescatado())) {
+            if (Boolean.FALSE.equals(publicacion.getEstadoRescatado())) {
                 publicacionesFiltradas.add(publicacion);
             }
         }
         return publicacionesFiltradas;
+    }
+    public List<Publicacion> publicacionesConEstadoTrue(List<Publicacion> publicaciones) {
+        List<Publicacion> publicacionesFiltradasR = new ArrayList<>();
+        for (Publicacion publicacion : publicaciones) {
+            if (Boolean.TRUE.equals(publicacion.getEstadoRescatado())) {
+                publicacionesFiltradasR.add(publicacion);
+            }
+        }
+        return publicacionesFiltradasR;
     }
 }
