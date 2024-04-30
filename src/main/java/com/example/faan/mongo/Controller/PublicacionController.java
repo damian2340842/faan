@@ -2,6 +2,7 @@ package com.example.faan.mongo.Controller;
 
 import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
+import com.example.faan.mongo.modelos.TipoPublicacion;
 import jakarta.validation.Valid;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +34,23 @@ public class PublicacionController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+    @GetMapping("/listar/perdidas")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesPerdidas() {
+        List<Publicacion> publicacionesPerdidas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
+        return ResponseEntity.ok(publicacionesPerdidas);
+    }
+
+    @GetMapping("/listar/encontradas")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {
+        List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
+        return ResponseEntity.ok(publicacionesEncontradas);
+    }
+
+    @GetMapping("/listar/adopcion")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesAdopcion() {
+        List<Publicacion> publicacionesAdopcion = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ADOPCION);
+        return ResponseEntity.ok(publicacionesAdopcion);
     }
 //Prueba
     @PostMapping(path = "/guardarPublicaciones")

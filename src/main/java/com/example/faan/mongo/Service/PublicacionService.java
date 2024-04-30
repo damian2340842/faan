@@ -2,6 +2,7 @@ package com.example.faan.mongo.Service;
 
 import com.example.faan.mongo.Repository.PublicacionRepository;
 import com.example.faan.mongo.modelos.Publicacion;
+import com.example.faan.mongo.modelos.TipoPublicacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +44,9 @@ public class PublicacionService {
     public List<Publicacion> obtenerTodasLasPublicaciones() {
         return publicacionRepository.findAll();
     }
+    public List<Publicacion> obtenerPublicacionesPorTipo(TipoPublicacion tipo) {
+        return publicacionRepository.findByTipoPublicacion(tipo);
+    }
 
     public Optional<Publicacion> obtenerPublicacionPorId(BigInteger id) {
         return publicacionRepository.findById(id);
@@ -73,6 +77,8 @@ public class PublicacionService {
         publicacionRepository.deleteById(id);
     }
 
-
+    public List<Publicacion> obtenerPublicacionesPorEstado(boolean estadoRescatado) {
+        return publicacionRepository.findByEstadoRescatado(estadoRescatado);
+    }
 
 }
