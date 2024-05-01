@@ -32,7 +32,7 @@ public class EncontradosController {
     }
 
 
-    @PostMapping(path = "/guardarPublicacionesEncontrados")
+    @PostMapping(path = "/guardarEncontrados")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
         try {
@@ -55,60 +55,8 @@ public class EncontradosController {
         }
     }
 
-    @PutMapping("/actualizarEncontradas/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
-        try {
-            // Verificar si la publicación existe y es del tipo "ENCONTRADO"
-            Optional<Publicacion> publicacionEncontradaOptional = publicacionService.obtenerPublicacionPorId(id);
-            if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.ENCONTRADO)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo ENCONTRADO");
-            }
-
-            // Actualizar la publicación
-            publicacionService.actualizarPublicacion(id, publicacion);
-            return ResponseEntity.ok("Publicación actualizada exitosamente");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al actualizar la publicación");
-        }
-    }
 
 
-
-
-    @DeleteMapping(path = "/eliminarEncontradas/{id}")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<String> eliminarPublicacion(@PathVariable BigInteger id) {
-        try {
-            Optional<Publicacion> publicacionOptional = publicacionService.obtenerPublicacionPorId(id);
-            if (!publicacionOptional.isPresent()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación con el ID: " + id);
-            }
-
-            this.publicacionService.eliminarPublicacion(id);
-
-            return ResponseEntity.status(HttpStatus.OK).body("Publicación eliminada exitosamente");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación");
-        }
-    }
-
-
-
-    @GetMapping("/buscarEncontradas/{id}")
-    public ResponseEntity<Publicacion> buscarPublicacionPorId(@PathVariable BigInteger id) {
-        try {
-            Publicacion publicacion = publicacionService.obtenerPublicacionPorId(id)
-                    .orElse(null);
-            if(publicacion != null) {
-                return ResponseEntity.ok(publicacion);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
 }
 
 

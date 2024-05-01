@@ -16,38 +16,30 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/publicaciones")
-public class AdoptadosControllers {
+public class PerdidosController {
 
     private final PublicacionService publicacionService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public AdoptadosControllers(PublicacionService publicacionService, SimpMessagingTemplate messagingTemplate) {
+    public PerdidosController(PublicacionService publicacionService, SimpMessagingTemplate messagingTemplate) {
         this.publicacionService = publicacionService;
         this.messagingTemplate = messagingTemplate;
     }
-    @GetMapping("/listar/adoptados")
-    public ResponseEntity<List<Publicacion>> listarPublicacionesAdoptado() {
-        List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ADOPCION);
-        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);
-        return ResponseEntity.ok(publicacionesEncontradasFiltradas);
-    }
 
 
-    @PostMapping(path = "/guardarAdoptados")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PostMapping(path = "/guardarPerdidos")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
         try {
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
             }
 
-            // Establecer el tipo de publicación como "ENCONTRADO" por defecto
-            publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
+            publicacion.setTipoPublicacion(TipoPublicacion.PERDIDO);
 
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
-                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación tipo adopcion creada exitosamente");
+                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación tipo perdido creada exitosamente");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
             }
@@ -55,6 +47,20 @@ public class AdoptadosControllers {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al procesar la solicitud");
         }
     }
+
+
+
+
+    @GetMapping("/listar/perdidas")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesPerdidas() {
+        List<Publicacion> publicacionesPerdidas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
+        List<Publicacion> publicacionesPerdidasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesPerdidas);
+        return ResponseEntity.ok(publicacionesPerdidasFiltradas);
+    }
+
+
+
+
 
 
 }

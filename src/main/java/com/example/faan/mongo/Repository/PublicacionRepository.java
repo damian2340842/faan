@@ -19,7 +19,10 @@ public interface PublicacionRepository extends MongoRepository<Publicacion, Long
     List<Publicacion> findByDescripcionEspecifica(String descripcionEspecifica);
     void deleteById(BigInteger id);
     List<Publicacion> findByEstadoRescatado(boolean estadoRescatado);
+
     List<Publicacion> findByTipoPublicacion(TipoPublicacion tipoPublicacion);
+
+    List<Publicacion> findByEstadoRescatadoAndTipoPublicacion(boolean estadoRescatado, TipoPublicacion tipoPublicacion);
 
 
 }

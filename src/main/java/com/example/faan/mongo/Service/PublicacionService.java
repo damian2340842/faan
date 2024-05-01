@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PublicacionService {
@@ -94,12 +95,21 @@ public class PublicacionService {
         return publicacionesFiltradas;
     }
     public List<Publicacion> publicacionesConEstadoTrue(List<Publicacion> publicaciones) {
-        List<Publicacion> publicacionesFiltradasR = new ArrayList<>();
+        List<Publicacion> publicacionesFiltradas = new ArrayList<>();
         for (Publicacion publicacion : publicaciones) {
             if (Boolean.TRUE.equals(publicacion.getEstadoRescatado())) {
-                publicacionesFiltradasR.add(publicacion);
+                publicacionesFiltradas.add(publicacion);
             }
         }
-        return publicacionesFiltradasR;
+        return publicacionesFiltradas;
+    }
+
+
+    public List<Publicacion> listarPublicacionesRescatadas() {
+        List<Publicacion> todasLasPublicaciones = publicacionRepository.findAll();
+        List<Publicacion> publicacionesRescatadas = publicacionesConEstadoTrue(todasLasPublicaciones);
+        return publicacionesRescatadas.stream()
+                .filter(publicacion -> publicacion.getTipoPublicacion() == TipoPublicacion.ENCONTRADO || publicacion.getTipoPublicacion() == TipoPublicacion.PERDIDO)
+                .collect(Collectors.toList());
     }
 }

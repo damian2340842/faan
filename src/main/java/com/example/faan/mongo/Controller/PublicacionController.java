@@ -25,6 +25,8 @@ public class PublicacionController {
         this.messagingTemplate = messagingTemplate;
     }
 
+
+    //LISTAR PUBLICACIONES GENERAL
     @GetMapping("/listar")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<Publicacion>> listarPublicaciones() {
@@ -35,14 +37,18 @@ public class PublicacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
+    //LISTA RESCATADOS(ENCONTRADOS Y PERDIDOS)
     @GetMapping("/listar/Rescatados")
-    public ResponseEntity<List<Publicacion>> listarPublicacionesRescatadosA() {
-        List<Publicacion> todasLasPublicaciones = publicacionService.obtenerTodasLasPublicaciones();
-        List<Publicacion> publicacionesRescatadas = publicacionService.publicacionesConEstadoTrue(todasLasPublicaciones);
+    public ResponseEntity<List<Publicacion>> listarPublicacionesRescatados() {
+        List<Publicacion> publicacionesRescatadas = publicacionService.listarPublicacionesRescatadas();
         return ResponseEntity.ok(publicacionesRescatadas);
     }
 
-    //Prueba
+
+
+    //GENERAL
     @PostMapping(path = "/guardarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
@@ -64,6 +70,8 @@ public class PublicacionController {
         }
     }
 
+
+    //actualiza todos tipo de publicaciones
     @PutMapping("/actualizar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
@@ -76,7 +84,7 @@ public class PublicacionController {
     }
 
 
-
+//elimina todos tipo de publicaciones
     @DeleteMapping(path = "/eliminar/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> eliminarPublicacion(@PathVariable BigInteger id) {
