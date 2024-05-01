@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,9 @@ public class PublicacionService {
     public Publicacion crearPublicacion(Publicacion publicacion1) {
         BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
 
+        // Asignar automáticamente la fecha de publicación actual
+        publicacion1.setFecha_publicacion(LocalDateTime.now());
+
         // Creamos la nueva publicación manteniendo la fecha como String
         Publicacion publicacion = Publicacion.builder()
                 .id(nuevaPublicacionId)
@@ -34,16 +38,13 @@ public class PublicacionService {
                 .tipoAnimal(publicacion1.getTipoAnimal())
                 .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
                 .tipoPublicacion(publicacion1.getTipoPublicacion())
-                .fecha(publicacion1.getFecha())
+                .fecha_publicacion(publicacion1.getFecha_publicacion())
                 .ubicacion(publicacion1.getUbicacion())
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .foto(publicacion1.getFoto())
                 .build();
-
         return publicacionRepository.save(publicacion);
     }
-
-
 
     public List<Publicacion> obtenerTodasLasPublicaciones() {
         return publicacionRepository.findAll();
