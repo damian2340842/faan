@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @Getter
 @Setter
 @Document(collection = "Publicaciones")
@@ -30,11 +30,9 @@ public class Publicacion {
     private Boolean estadoRescatado;
     private byte[] foto;
 
-    /// Hola
-    // Nuevo atributo para mostrar la fecha sin hora
-    private String fechaSinHora;
+    // Constructor Fecha
 
-    // Constructor
+
 
     public Publicacion(BigInteger id, String nombre, String raza, String sexo, TipoAnimal tipoAnimal, TipoPublicacion tipoPublicacion, String descripcionEspecifica, Date fecha, String ubicacion, Boolean estadoRescatado, byte[] foto) {
         this.id = id;
@@ -48,18 +46,16 @@ public class Publicacion {
         this.ubicacion = ubicacion;
         this.estadoRescatado = estadoRescatado;
         this.foto = foto;
-
-        // Formateamos la fecha sin la hora y la guardamos en el atributo correspondiente
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        this.fechaSinHora = dateFormat.format(fecha);
     }
 
-    // Getters y setters para el nuevo atributo
+    // Método para obtener la fecha formateada como "yyyy-MM-dd"
     public String getFechaSinHora() {
-        return fechaSinHora;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(fecha);
     }
 
-    public void setFechaSinHora(String fechaSinHora) {
-        this.fechaSinHora = fechaSinHora;
+    // Setter para la fecha
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 }
