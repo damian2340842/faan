@@ -2,13 +2,12 @@ package com.example.faan.mongo.Service;
 
 import com.example.faan.mongo.Repository.PublicacionRepository;
 import com.example.faan.mongo.modelos.Publicacion;
-import com.example.faan.mongo.modelos.TipoPublicacion;
+import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

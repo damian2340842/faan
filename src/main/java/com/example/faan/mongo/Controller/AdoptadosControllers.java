@@ -2,17 +2,14 @@ package com.example.faan.mongo.Controller;
 
 import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
-import com.example.faan.mongo.modelos.TipoPublicacion;
-import jakarta.validation.Valid;
+import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/publicaciones")

@@ -2,7 +2,6 @@ package com.example.faan.mongo.Controller;
 
 import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
-import com.example.faan.mongo.modelos.TipoPublicacion;
 import jakarta.validation.Valid;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -118,4 +117,11 @@ public class PublicacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
+    //filtrado por nombre,raza,fecha
+
+
+
+
 }
