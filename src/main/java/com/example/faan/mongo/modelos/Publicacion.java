@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 @Data
 @Builder
@@ -22,7 +23,7 @@ public class Publicacion  {
     private TipoAnimal tipoAnimal;
     private TipoPublicacion tipoPublicacion;
     private String descripcionEspecifica;
-    private String fecha;
+    private Date fecha;
     private String ubicacion;
     private Boolean estadoRescatado;
     private byte[]  foto;
