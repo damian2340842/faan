@@ -30,12 +30,7 @@ public class EncontradosController {
         List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);
         return ResponseEntity.ok(publicacionesEncontradasFiltradas);
     }
-    @GetMapping("/listar/Rescatados")
-    public ResponseEntity<List<Publicacion>> listarPublicacionesRescatados() {
-        List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
-        List<Publicacion> publicacionesEncontradasFiltradasR = publicacionService.publicacionesConEstadoTrue(publicacionesEncontradas);
-        return ResponseEntity.ok(publicacionesEncontradasFiltradasR);
-    }
+
 
     @PostMapping(path = "/guardarPublicacionesEncontrados")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -64,12 +59,20 @@ public class EncontradosController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
+            // Verificar si la publicación existe y es del tipo "ENCONTRADO"
+            Optional<Publicacion> publicacionEncontradaOptional = publicacionService.obtenerPublicacionPorId(id);
+            if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.ENCONTRADO)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo ENCONTRADO");
+            }
+
+            // Actualizar la publicación
             publicacionService.actualizarPublicacion(id, publicacion);
             return ResponseEntity.ok("Publicación actualizada exitosamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al actualizar la publicación");
         }
     }
+
 
 
 
