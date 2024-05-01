@@ -25,9 +25,6 @@ public class PublicacionService {
     public Publicacion crearPublicacion(Publicacion publicacion1) {
         BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
 
-        // Formateamos la fecha sin la hora
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaSinHora = dateFormat.format(publicacion1.getFecha());
 
         // Creamos la nueva publicación con la fecha sin hora
         Publicacion publicacion = Publicacion.builder()
