@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +22,14 @@ public class PublicacionService {
     private CounterService counterService;
 
 
-    @Transactional
     public Publicacion crearPublicacion(Publicacion publicacion1) {
         BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
+
+        // Formateamos la fecha sin la hora
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaSinHora = dateFormat.format(publicacion1.getFecha());
+
+        // Creamos la nueva publicación con la fecha sin hora
         Publicacion publicacion = Publicacion.builder()
                 .id(nuevaPublicacionId)
                 .nombre(publicacion1.getNombre())
@@ -32,11 +38,12 @@ public class PublicacionService {
                 .tipoAnimal(publicacion1.getTipoAnimal())
                 .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
                 .tipoPublicacion(publicacion1.getTipoPublicacion())
-                .fecha(publicacion1.getFecha())
+                .fechaSinHora(fechaSinHora) // Usamos la fecha sin hora
                 .ubicacion(publicacion1.getUbicacion())
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .foto(publicacion1.getFoto())
                 .build();
+
         return publicacionRepository.save(publicacion);
     }
 
