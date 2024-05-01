@@ -5,7 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
-import java.time.LocalDate; // Importa la clase LocalDate
+import java.time.LocalDateTime;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 @Data
 @Builder
@@ -28,4 +30,6 @@ public class Publicacion {
     private String ubicacion;
     private Boolean estadoRescatado;
     private byte[] foto;
+    private LocalDateTime fecha_publicacion;
+
 }
