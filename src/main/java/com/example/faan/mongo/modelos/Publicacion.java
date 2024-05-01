@@ -5,8 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
-import java.time.LocalDate; // Importa la clase LocalDate
-import java.time.ZoneId;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
@@ -26,10 +25,14 @@ public class Publicacion {
     private TipoAnimal tipoAnimal;
     private TipoPublicacion tipoPublicacion;
     private String descripcionEspecifica;
-    private LocalDate fecha; // Cambiado a LocalDate
+    private Date fecha; // Mantenemos la fecha como un objeto Date
     private String ubicacion;
     private Boolean estadoRescatado;
     private byte[] foto;
+
+    /// Hola
+    // Nuevo atributo para mostrar la fecha sin hora
+    private String fechaSinHora;
 
     // Constructor
 
@@ -41,12 +44,22 @@ public class Publicacion {
         this.tipoAnimal = tipoAnimal;
         this.tipoPublicacion = tipoPublicacion;
         this.descripcionEspecifica = descripcionEspecifica;
-
-        // Convierte la fecha de Date a LocalDate
-        this.fecha = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
+        this.fecha = fecha;
         this.ubicacion = ubicacion;
         this.estadoRescatado = estadoRescatado;
         this.foto = foto;
+
+        // Formateamos la fecha sin la hora y la guardamos en el atributo correspondiente
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        this.fechaSinHora = dateFormat.format(fecha);
+    }
+
+    // Getters y setters para el nuevo atributo
+    public String getFechaSinHora() {
+        return fechaSinHora;
+    }
+
+    public void setFechaSinHora(String fechaSinHora) {
+        this.fechaSinHora = fechaSinHora;
     }
 }
