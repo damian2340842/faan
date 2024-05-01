@@ -5,7 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate; // Importa la clase LocalDate
+import java.time.ZoneId;
 import java.util.Date;
 
 @Data
@@ -49,8 +50,8 @@ public class Publicacion {
         this.foto = foto;
 
         // Formateamos la fecha sin la hora y la guardamos en el atributo correspondiente
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        this.fechaSinHora = dateFormat.format(fecha);
+        LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        this.fechaSinHora = localDate.toString();
     }
 
     // Getters y setters para el nuevo atributo
