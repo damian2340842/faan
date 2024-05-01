@@ -24,7 +24,7 @@ public class Publicacion {
     private TipoAnimal tipoAnimal;
     private TipoPublicacion tipoPublicacion;
     private String descripcionEspecifica;
-    private String fecha; // Cambiado a LocalDate
+    private String fecha; // Cambiado a tipo String
     private String ubicacion;
     private Boolean estadoRescatado;
     private byte[] foto;

@@ -25,8 +25,7 @@ public class PublicacionService {
     public Publicacion crearPublicacion(Publicacion publicacion1) {
         BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
 
-
-        // Creamos la nueva publicación con la fecha sin hora
+        // Creamos la nueva publicación manteniendo la fecha como String
         Publicacion publicacion = Publicacion.builder()
                 .id(nuevaPublicacionId)
                 .nombre(publicacion1.getNombre())
@@ -35,7 +34,7 @@ public class PublicacionService {
                 .tipoAnimal(publicacion1.getTipoAnimal())
                 .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
                 .tipoPublicacion(publicacion1.getTipoPublicacion())
-                .fecha(publicacion1.getFecha())
+                .fecha(publicacion1.getFecha())  // Conservamos la fecha original
                 .ubicacion(publicacion1.getUbicacion())
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .foto(publicacion1.getFoto())
