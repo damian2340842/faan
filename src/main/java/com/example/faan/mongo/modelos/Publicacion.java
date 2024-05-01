@@ -26,13 +26,10 @@ public class Publicacion {
     private TipoAnimal tipoAnimal;
     private TipoPublicacion tipoPublicacion;
     private String descripcionEspecifica;
-    private Date fecha; // Mantenemos la fecha como un objeto Date
+    private LocalDate fecha; // Cambiado a LocalDate
     private String ubicacion;
     private Boolean estadoRescatado;
     private byte[] foto;
-
-    // Nuevo atributo para mostrar la fecha sin hora
-    private String fechaSinHora;
 
     // Constructor
 
@@ -44,22 +41,12 @@ public class Publicacion {
         this.tipoAnimal = tipoAnimal;
         this.tipoPublicacion = tipoPublicacion;
         this.descripcionEspecifica = descripcionEspecifica;
-        this.fecha = fecha;
+
+        // Convierte la fecha de Date a LocalDate
+        this.fecha = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
         this.ubicacion = ubicacion;
         this.estadoRescatado = estadoRescatado;
         this.foto = foto;
-
-        // Formateamos la fecha sin la hora y la guardamos en el atributo correspondiente
-        LocalDate localDate = fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        this.fechaSinHora = localDate.toString();
-    }
-
-    // Getters y setters para el nuevo atributo
-    public String getFechaSinHora() {
-        return fechaSinHora;
-    }
-
-    public void setFechaSinHora(String fechaSinHora) {
-        this.fechaSinHora = fechaSinHora;
     }
 }

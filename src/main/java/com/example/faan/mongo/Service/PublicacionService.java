@@ -38,7 +38,6 @@ public class PublicacionService {
                 .tipoAnimal(publicacion1.getTipoAnimal())
                 .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
                 .tipoPublicacion(publicacion1.getTipoPublicacion())
-                .fechaSinHora(fechaSinHora) // Usamos la fecha sin hora
                 .ubicacion(publicacion1.getUbicacion())
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .foto(publicacion1.getFoto())
