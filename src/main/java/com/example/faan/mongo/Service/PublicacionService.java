@@ -38,6 +38,7 @@ public class PublicacionService {
                 .tipoAnimal(publicacion1.getTipoAnimal())
                 .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
                 .tipoPublicacion(publicacion1.getTipoPublicacion())
+                .fecha(publicacion1.getFecha())
                 .fecha_publicacion(publicacion1.getFecha_publicacion())
                 .ubicacion(publicacion1.getUbicacion())
                 .estadoRescatado(publicacion1.getEstadoRescatado())
