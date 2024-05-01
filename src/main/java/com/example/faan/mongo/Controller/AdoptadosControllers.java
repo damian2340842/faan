@@ -56,10 +56,17 @@ public class AdoptadosControllers {
         }
     }
 
-    @PutMapping("/actualizaradoptados/{id}")
+    @PutMapping("/actualizarAdptados/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
+            // Verificar si la publicación existe y es del tipo "ENCONTRADO"
+            Optional<Publicacion> publicacionEncontradaOptional = publicacionService.obtenerPublicacionPorId(id);
+            if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.ADOPCION)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo ADOPCION");
+            }
+
+            // Actualizar la publicación
             publicacionService.actualizarPublicacion(id, publicacion);
             return ResponseEntity.ok("Publicación actualizada exitosamente");
         } catch (Exception e) {
