@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
+import java.time.LocalDate; // Importa la clase LocalDate
 
 @Data
 @Builder
@@ -13,7 +14,8 @@ import java.math.BigInteger;
 @Getter
 @Setter
 @Document(collection = "Publicaciones")
-public class Publicacion  {
+public class Publicacion {
+
     @Id
     private BigInteger id;
     private String nombre;
@@ -22,10 +24,8 @@ public class Publicacion  {
     private TipoAnimal tipoAnimal;
     private TipoPublicacion tipoPublicacion;
     private String descripcionEspecifica;
-    private String fecha;
+    private String fecha; // Cambiado a tipo String
     private String ubicacion;
     private Boolean estadoRescatado;
-    private byte[]  foto;
-
-
+    private byte[] foto;
 }

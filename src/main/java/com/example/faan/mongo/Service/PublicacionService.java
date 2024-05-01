@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +22,10 @@ public class PublicacionService {
     private CounterService counterService;
 
 
-    @Transactional
     public Publicacion crearPublicacion(Publicacion publicacion1) {
         BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
+
+        // Creamos la nueva publicación manteniendo la fecha como String
         Publicacion publicacion = Publicacion.builder()
                 .id(nuevaPublicacionId)
                 .nombre(publicacion1.getNombre())
@@ -37,6 +39,7 @@ public class PublicacionService {
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .foto(publicacion1.getFoto())
                 .build();
+
         return publicacionRepository.save(publicacion);
     }
 
