@@ -2,17 +2,17 @@ package com.example.faan.mongo.Service;
 
 import com.example.faan.mongo.Repository.PublicacionRepository;
 import com.example.faan.mongo.modelos.Publicacion;
-import com.example.faan.mongo.modelos.TipoPublicacion;
+import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PublicacionService {
@@ -98,13 +98,22 @@ public class PublicacionService {
         return publicacionesFiltradas;
     }
     public List<Publicacion> publicacionesConEstadoTrue(List<Publicacion> publicaciones) {
-        List<Publicacion> publicacionesFiltradasR = new ArrayList<>();
+        List<Publicacion> publicacionesFiltradas = new ArrayList<>();
         for (Publicacion publicacion : publicaciones) {
             if (Boolean.TRUE.equals(publicacion.getEstadoRescatado())) {
-                publicacionesFiltradasR.add(publicacion);
+                publicacionesFiltradas.add(publicacion);
             }
         }
-        return publicacionesFiltradasR;
+        return publicacionesFiltradas;
+    }
+
+
+    public List<Publicacion> listarPublicacionesRescatadas() {
+        List<Publicacion> todasLasPublicaciones = publicacionRepository.findAll();
+        List<Publicacion> publicacionesRescatadas = publicacionesConEstadoTrue(todasLasPublicaciones);
+        return publicacionesRescatadas.stream()
+                .filter(publicacion -> publicacion.getTipoPublicacion() == TipoPublicacion.ENCONTRADO || publicacion.getTipoPublicacion() == TipoPublicacion.PERDIDO)
+                .collect(Collectors.toList());
     }
     public List<Publicacion> publicacionesConEstadoFavTrue(List<Publicacion> publicaciones) {
         List<Publicacion> publicacionesFiltradasF = new ArrayList<>();

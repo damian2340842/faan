@@ -1,13 +1,13 @@
 package com.example.faan.mongo.modelos;
 
+import com.example.faan.mongo.modelos.EnumsFijo.TipoAnimal;
+import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 @Data
 @Builder
