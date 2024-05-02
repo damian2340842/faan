@@ -22,6 +22,8 @@ public class EncontradosController {
         this.messagingTemplate = messagingTemplate;
     }
     @GetMapping("/listar/encontradas")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+
     public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {
         List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
         List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);

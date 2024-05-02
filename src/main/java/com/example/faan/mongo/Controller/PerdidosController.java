@@ -6,6 +6,7 @@ import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class PerdidosController {
 
 
     @PostMapping(path = "/guardarPerdidos")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
         try {
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
