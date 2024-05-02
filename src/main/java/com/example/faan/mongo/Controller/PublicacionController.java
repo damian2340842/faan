@@ -41,6 +41,12 @@ public class PublicacionController {
         List<Publicacion> publicacionesRescatadas = publicacionService.publicacionesConEstadoTrue(todasLasPublicaciones);
         return ResponseEntity.ok(publicacionesRescatadas);
     }
+    @GetMapping("/listar/Favoritos")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesFavoritos() {
+        List<Publicacion> todasLasPublicaciones = publicacionService.obtenerTodasLasPublicaciones();
+        List<Publicacion> publicacionesRescatadas = publicacionService.publicacionesConEstadoFavTrue(todasLasPublicaciones);
+        return ResponseEntity.ok(publicacionesRescatadas);
+    }
 
     //Prueba
     @PostMapping(path = "/guardarPublicaciones")

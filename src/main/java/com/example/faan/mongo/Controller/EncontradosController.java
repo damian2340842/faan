@@ -42,7 +42,8 @@ public class EncontradosController {
 
             // Establecer el tipo de publicación como "ENCONTRADO" por defecto
             publicacion.setTipoPublicacion(TipoPublicacion.ENCONTRADO);
-
+            publicacion.setEstadoRescatado(false);
+            publicacion.setEstadoFavoritos(false);
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
@@ -64,9 +65,46 @@ public class EncontradosController {
             if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.ENCONTRADO)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo ENCONTRADO");
             }
+            Publicacion publicacionExistente = publicacionEncontradaOptional.get();
 
+            // Fusionar los campos del cuerpo de la solicitud con los campos existentes de la publicación
+            if (publicacion.getNombre() != null) {
+                publicacionExistente.setNombre(publicacion.getNombre());
+            }
+            if (publicacion.getRaza() != null) {
+                publicacionExistente.setRaza(publicacion.getRaza());
+            }
+            if (publicacion.getSexo() != null) {
+                publicacionExistente.setSexo(publicacion.getSexo());
+            }
+            if (publicacion.getTipoAnimal() != null) {
+                publicacionExistente.setTipoAnimal(publicacion.getTipoAnimal());
+            }
+            if (publicacion.getTipoPublicacion() != null) {
+                publicacionExistente.setTipoPublicacion(publicacion.getTipoPublicacion());
+            }
+            if (publicacion.getDescripcionEspecifica() != null) {
+                publicacionExistente.setDescripcionEspecifica(publicacion.getDescripcionEspecifica());
+            }
+            if (publicacion.getFecha() != null) {
+                publicacionExistente.setFecha(publicacion.getFecha());
+            }
+            if (publicacion.getUbicacion() != null) {
+                publicacionExistente.setUbicacion(publicacion.getUbicacion());
+            }
+            Boolean estadoRescatado = publicacion.getEstadoRescatado();
+            if (estadoRescatado != null) {
+                publicacionExistente.setEstadoRescatado(estadoRescatado);
+            }
+            Boolean estadoFavoritos = publicacion.getEstadoFavoritos();
+            if (estadoFavoritos != null) {
+                publicacionExistente.setEstadoFavoritos(publicacion.getEstadoFavoritos());
+            }
+            if (publicacion.getFoto() != null) {
+            }
+            publicacionExistente.setFoto(publicacion.getFoto());
             // Actualizar la publicación
-            publicacionService.actualizarPublicacion(id, publicacion);
+            publicacionService.actualizarPublicacion(id, publicacionExistente);
             return ResponseEntity.ok("Publicación actualizada exitosamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al actualizar la publicación");

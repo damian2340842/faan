@@ -29,6 +29,8 @@ public class Publicacion {
     private String fecha; // Cambiado a tipo String
     private String ubicacion;
     private Boolean estadoRescatado;
+    private Boolean estadoFavoritos;
+
     private byte[] foto;
     private LocalDateTime fecha_publicacion;
 

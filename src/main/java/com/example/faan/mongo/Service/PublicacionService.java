@@ -42,6 +42,7 @@ public class PublicacionService {
                 .fecha_publicacion(publicacion1.getFecha_publicacion())
                 .ubicacion(publicacion1.getUbicacion())
                 .estadoRescatado(publicacion1.getEstadoRescatado())
+                .estadoFavoritos(publicacion1.getEstadoFavoritos())
                 .foto(publicacion1.getFoto())
                 .build();
         return publicacionRepository.save(publicacion);
@@ -71,6 +72,7 @@ public class PublicacionService {
             publicacion.setFecha(nuevaPublicacion.getFecha());
             publicacion.setUbicacion(nuevaPublicacion.getUbicacion());
             publicacion.setEstadoRescatado(nuevaPublicacion.getEstadoRescatado());
+            publicacion.setEstadoFavoritos(nuevaPublicacion.getEstadoFavoritos());
             publicacion.setFoto(nuevaPublicacion.getFoto());
             // Puedes agregar aquí más campos para actualizar si tienes más campos en el modelo de publicación.
             return publicacionRepository.save(publicacion);
@@ -103,5 +105,14 @@ public class PublicacionService {
             }
         }
         return publicacionesFiltradasR;
+    }
+    public List<Publicacion> publicacionesConEstadoFavTrue(List<Publicacion> publicaciones) {
+        List<Publicacion> publicacionesFiltradasF = new ArrayList<>();
+        for (Publicacion publicacion : publicaciones) {
+            if (Boolean.TRUE.equals(publicacion.getEstadoFavoritos())) {
+                publicacionesFiltradasF.add(publicacion);
+            }
+        }
+        return publicacionesFiltradasF;
     }
 }

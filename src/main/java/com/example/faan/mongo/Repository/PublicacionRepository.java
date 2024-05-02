@@ -21,5 +21,6 @@ public interface PublicacionRepository extends MongoRepository<Publicacion, Long
     List<Publicacion> findByEstadoRescatado(boolean estadoRescatado);
     List<Publicacion> findByTipoPublicacion(TipoPublicacion tipoPublicacion);
 
+    List<Publicacion> findByEstadoFavoritos(boolean estadoFavorito);
 
 }

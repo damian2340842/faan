@@ -43,7 +43,8 @@ public class AdoptadosControllers {
 
             // Establecer el tipo de publicación como "ENCONTRADO" por defecto
             publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
-
+            publicacion.setEstadoRescatado(false);
+            publicacion.setEstadoFavoritos(false);
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
