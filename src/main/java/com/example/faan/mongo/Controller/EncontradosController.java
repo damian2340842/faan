@@ -61,7 +61,7 @@ public class EncontradosController {
 
     @PutMapping("/actualizarEncontradas/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
+    public ResponseEntity<String> actualizarPublicacionencontrados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
             // Verificar si la publicación existe y es del tipo "ENCONTRADO"
             Optional<Publicacion> publicacionEncontradaOptional = publicacionService.obtenerPublicacionPorId(id);
@@ -114,6 +114,22 @@ public class EncontradosController {
         }
     }
 
+    @DeleteMapping(path = "/eliminar/encontrados/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<String> eliminarPublicacionEncontrada(@PathVariable BigInteger id) {
+        try {
+            Optional<Publicacion> publicacionOptional = publicacionService.obtenerPublicacionPorId(id);
+            if (!publicacionOptional.isPresent() || publicacionOptional.get().getTipoPublicacion() != TipoPublicacion.ENCONTRADO) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación de tipo ENCONTRADO con el ID: " + id);
+            }
+
+            publicacionService.eliminarPublicacion(id);
+
+            return ResponseEntity.status(HttpStatus.OK).body("Publicación de tipo ENCONTRADO eliminada exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo ENCONTRADO");
+        }
+    }
 
 
 }
