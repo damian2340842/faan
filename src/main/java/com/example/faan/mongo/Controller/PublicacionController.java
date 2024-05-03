@@ -104,19 +104,22 @@ public class PublicacionController {
 
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<Publicacion> buscarPublicacionPorId(@PathVariable BigInteger id) {
+    public ResponseEntity<?> buscarPublicacionPorId(@PathVariable BigInteger id) {
         try {
             Publicacion publicacion = publicacionService.obtenerPublicacionPorId(id)
                     .orElse(null);
             if(publicacion != null) {
                 return ResponseEntity.ok(publicacion);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No se encontró ninguna publicación con el ID proporcionado.");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocurrió un error al procesar la solicitud.");
         }
     }
+
 
 
     //filtrado por nombre,raza,fecha
