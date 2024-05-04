@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -18,45 +16,40 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/publicaciones")
-public class AdoptadosControllers {
-
+public class EncontradosController {
     private final PublicacionService publicacionService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public AdoptadosControllers(PublicacionService publicacionService, SimpMessagingTemplate messagingTemplate) {
+    public EncontradosController(PublicacionService publicacionService, SimpMessagingTemplate messagingTemplate) {
         this.publicacionService = publicacionService;
         this.messagingTemplate = messagingTemplate;
     }
-    @GetMapping("/listar/adoptadas")
+    @GetMapping("/listar/encontradas")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+
     public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {
-        List<Publicacion> publicacionesAdoptadas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ADOPCION);
-        List<Publicacion> publicacionesAdoptadasFiltradas = publicacionService.publicacionesConEstado(publicacionesAdoptadas);
-        return ResponseEntity.ok(publicacionesAdoptadasFiltradas);
+        List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
+        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);
+        return ResponseEntity.ok(publicacionesEncontradasFiltradas);
     }
 
 
-
-    @PostMapping(path = "/guardarAdoptados")
-    @PreAuthorize("hasAnyRole( 'ADMIN')")
+    @PostMapping(path = "/guardarEncontrados")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
         try {
-            if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("No puede realizar la acción de CREACION debido a que su usuario no tiene el rol de administrador");
-            }
-
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
             }
-            publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
+
+            // Establecer el tipo de publicación como "ENCONTRADO" por defecto
+            publicacion.setTipoPublicacion(TipoPublicacion.ENCONTRADO);
             publicacion.setEstadoRescatado(false);
             publicacion.setEstadoFavoritos(false);
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
-                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación tipo adopcion creada exitosamente");
+                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación tipo encontrado creada exitosamente");
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
             }
@@ -65,20 +58,15 @@ public class AdoptadosControllers {
         }
     }
 
-    @PutMapping("/actualizarAdoptados/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<String> actualizarPublicacionadoptados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
-        try {
 
-            if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("No puede realizar la acción de ACTUALIZACION debido a que su usuario no tiene el rol de administrador");
-            }
+    @PutMapping("/actualizarEncontradas/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> actualizarPublicacionencontrados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
+        try {
             // Verificar si la publicación existe y es del tipo "ENCONTRADO"
             Optional<Publicacion> publicacionEncontradaOptional = publicacionService.obtenerPublicacionPorId(id);
-            if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.ADOPCION)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo ADOPCION");
+            if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.ENCONTRADO)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo ENCONTRADO");
             }
             Publicacion publicacionExistente = publicacionEncontradaOptional.get();
 
@@ -125,27 +113,26 @@ public class AdoptadosControllers {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al actualizar la publicación");
         }
     }
-    @DeleteMapping(path = "/eliminar/adopciones/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<String> eliminarPublicacionAdopcion(@PathVariable BigInteger id){
-        try {
-            if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("No puede realizar la acción de ELIMINACION debido a que su usuario no tiene el rol de administrador");
-            }
 
+    @DeleteMapping(path = "/eliminar/encontrados/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<String> eliminarPublicacionEncontrada(@PathVariable BigInteger id) {
+        try {
             Optional<Publicacion> publicacionOptional = publicacionService.obtenerPublicacionPorId(id);
-            if (!publicacionOptional.isPresent() || publicacionOptional.get().getTipoPublicacion() != TipoPublicacion.ADOPCION) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación de tipo ADOPCION con el ID: " + id);
+            if (!publicacionOptional.isPresent() || publicacionOptional.get().getTipoPublicacion() != TipoPublicacion.ENCONTRADO) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación de tipo ENCONTRADO con el ID: " + id);
             }
 
             publicacionService.eliminarPublicacion(id);
 
-            return ResponseEntity.status(HttpStatus.OK).body("Publicación de tipo ADOPCION eliminada exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).body("Publicación de tipo ENCONTRADO eliminada exitosamente");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo ADOPCION");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo ENCONTRADO");
         }
     }
 
+
 }
+
+
+

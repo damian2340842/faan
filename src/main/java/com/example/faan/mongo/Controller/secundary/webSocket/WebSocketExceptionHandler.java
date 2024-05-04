@@ -1,4 +1,4 @@
-package com.example.faan.mongo.Controller;
+package com.example.faan.mongo.Controller.secundary.webSocket;
 
 
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
