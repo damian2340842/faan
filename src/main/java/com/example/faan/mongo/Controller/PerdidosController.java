@@ -36,6 +36,8 @@ public class PerdidosController {
             }
 
             publicacion.setTipoPublicacion(TipoPublicacion.PERDIDO);
+            publicacion.setEstadoRescatado(false);
+            publicacion.setEstadoFavoritos(false);
 
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
@@ -55,11 +57,9 @@ public class PerdidosController {
     @GetMapping("/listar/perdidas")
     public ResponseEntity<List<Publicacion>> listarPublicacionesPerdidas() {
         List<Publicacion> publicacionesPerdidas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
-        List<Publicacion> publicacionesPerdidasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesPerdidas);
+        List<Publicacion> publicacionesPerdidasFiltradas = publicacionService.publicacionesConEstado(publicacionesPerdidas);
         return ResponseEntity.ok(publicacionesPerdidasFiltradas);
     }
-
-
 
     @PutMapping("/actualizarPerdidos/{id}")
     @PreAuthorize("hasRole('ADMIN')")

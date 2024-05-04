@@ -26,12 +26,12 @@ public class EncontradosController {
     }
     @GetMapping("/listar/encontradas")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-
     public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {
         List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ENCONTRADO);
-        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);
+        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstado(publicacionesEncontradas);
         return ResponseEntity.ok(publicacionesEncontradasFiltradas);
     }
+
 
 
     @PostMapping(path = "/guardarEncontrados")

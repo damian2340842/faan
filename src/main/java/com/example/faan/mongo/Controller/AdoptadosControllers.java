@@ -27,12 +27,14 @@ public class AdoptadosControllers {
         this.publicacionService = publicacionService;
         this.messagingTemplate = messagingTemplate;
     }
-    @GetMapping("/listar/adoptados")
-    public ResponseEntity<List<Publicacion>> listarPublicacionesAdoptado() {
-        List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ADOPCION);
-        List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);
-        return ResponseEntity.ok(publicacionesEncontradasFiltradas);
+    @GetMapping("/listar/adoptadas")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {
+        List<Publicacion> publicacionesAdoptadas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.ADOPCION);
+        List<Publicacion> publicacionesAdoptadasFiltradas = publicacionService.publicacionesConEstado(publicacionesAdoptadas);
+        return ResponseEntity.ok(publicacionesAdoptadasFiltradas);
     }
+
 
 
     @PostMapping(path = "/guardarAdoptados")
@@ -48,8 +50,6 @@ public class AdoptadosControllers {
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
             }
-
-            // Establecer el tipo de publicación como "ENCONTRADO" por defecto
             publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
             publicacion.setEstadoRescatado(false);
             publicacion.setEstadoFavoritos(false);
@@ -65,7 +65,7 @@ public class AdoptadosControllers {
         }
     }
 
-    @PutMapping("/actualizarAdontados/{id}")
+    @PutMapping("/actualizarAdoptados/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacionadoptados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {

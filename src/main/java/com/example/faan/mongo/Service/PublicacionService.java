@@ -1,8 +1,10 @@
 package com.example.faan.mongo.Service;
 
 import com.example.faan.mongo.Repository.PublicacionRepository;
+import com.example.faan.mongo.Repository.UsuarioRepository;
 import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
+import com.example.faan.mongo.modelos.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,8 @@ public class PublicacionService {
     @Autowired
     private CounterService counterService;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public Publicacion crearPublicacion(Publicacion publicacion1) {
         BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
@@ -108,6 +112,14 @@ public class PublicacionService {
     }
 
 
+    public List<Publicacion> publicacionesConEstado(List<Publicacion> publicaciones) {
+        List<Publicacion> publicacionesFiltradas = new ArrayList<>();
+        for (Publicacion publicacion : publicaciones) {
+            publicacionesFiltradas.add(publicacion);
+        }
+        return publicacionesFiltradas;
+    }
+
     public List<Publicacion> listarPublicacionesRescatadas() {
         List<Publicacion> todasLasPublicaciones = publicacionRepository.findAll();
         List<Publicacion> publicacionesRescatadas = publicacionesConEstadoTrue(todasLasPublicaciones);
@@ -124,4 +136,5 @@ public class PublicacionService {
         }
         return publicacionesFiltradasF;
     }
+
 }

@@ -25,18 +25,6 @@ public class PublicacionController {
     }
 
 
-    //LISTAR PUBLICACIONES GENERAL
-    @GetMapping("/listar")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<List<Publicacion>> listarPublicaciones() {
-        try {
-            List<Publicacion> publicaciones = publicacionService.obtenerTodasLasPublicaciones();
-            return ResponseEntity.ok(publicaciones);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-
 
     //LISTA RESCATADOS(ENCONTRADOS Y PERDIDOS)
     @GetMapping("/listar/Rescatados")
@@ -51,29 +39,6 @@ public class PublicacionController {
         return ResponseEntity.ok(publicacionesRescatadas);
     }
 
-
-
-    //GENERAL
-    @PostMapping(path = "/guardarPublicaciones")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
-        try {
-            if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
-            }
-
-            Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
-            if (nuevaPublicacion != null) {
-                messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
-
-                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación creada exitosamente");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al procesar la solicitud");
-        }
-    }
 
 
     //actualiza todos tipo de publicaciones

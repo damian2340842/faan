@@ -1,20 +1,25 @@
 package com.example.faan.mongo.Controller;
 
+import com.example.faan.mongo.Repository.PublicacionRepository;
 import com.example.faan.mongo.Repository.UsuarioRepository;
 import com.example.faan.mongo.Service.AuthService;
 import com.example.faan.mongo.Service.CounterService;
 import com.example.faan.mongo.modelos.AuthResponse;
 import com.example.faan.mongo.modelos.LoginRequest;
+import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.Usuario;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -26,6 +31,7 @@ public class AuthController {
 
     private final AuthService authService;
         private final UsuarioRepository usuarioRepository;
+        private final PublicacionRepository publicacionRepository;
 
     private final CounterService counterService;
 
@@ -80,4 +86,9 @@ public class AuthController {
         request.getSession().invalidate();
         return ResponseEntity.ok("Sesión cerrada correctamente.");
 }
+
+
+
+
+
 }
