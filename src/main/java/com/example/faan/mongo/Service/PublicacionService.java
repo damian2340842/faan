@@ -6,6 +6,9 @@ import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import com.example.faan.mongo.modelos.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,34 +30,38 @@ public class PublicacionService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Publicacion crearPublicacion(Publicacion publicacion1) {
-        BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
+    @Autowired
+    private UsuarioService usuarioService;
 
-        // Asignar automáticamente la fecha de publicación actual
-        publicacion1.setFecha_publicacion(LocalDateTime.now());
-
-        // Creamos la nueva publicación manteniendo la fecha como String
-        Publicacion publicacion = Publicacion.builder()
-                .id(nuevaPublicacionId)
-                .nombre(publicacion1.getNombre())
-                .raza(publicacion1.getRaza())
-                .sexo(publicacion1.getSexo())
-                .tipoAnimal(publicacion1.getTipoAnimal())
-                .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
-                .tipoPublicacion(publicacion1.getTipoPublicacion())
-                .fecha(publicacion1.getFecha())
-                .fecha_publicacion(publicacion1.getFecha_publicacion())
-                .ubicacion(publicacion1.getUbicacion())
-                .estadoRescatado(publicacion1.getEstadoRescatado())
-                .estadoFavoritos(publicacion1.getEstadoFavoritos())
-                .foto(publicacion1.getFoto())
-                .build();
-        return publicacionRepository.save(publicacion);
-    }
+//    public Publicacion crearPublicacion(Publicacion publicacion1) {
+//        BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
+//
+//        // Asignar automáticamente la fecha de publicación actual
+//        publicacion1.setFecha_publicacion(LocalDateTime.now());
+//
+//        // Creamos la nueva publicación manteniendo la fecha como String
+//        Publicacion publicacion = Publicacion.builder()
+//                .id(nuevaPublicacionId)
+//                .nombre(publicacion1.getNombre())
+//                .raza(publicacion1.getRaza())
+//                .sexo(publicacion1.getSexo())
+//                .tipoAnimal(publicacion1.getTipoAnimal())
+//                .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
+//                .tipoPublicacion(publicacion1.getTipoPublicacion())
+//                .fecha(publicacion1.getFecha())
+//                .fecha_publicacion(publicacion1.getFecha_publicacion())
+//                .ubicacion(publicacion1.getUbicacion())
+//                .estadoRescatado(publicacion1.getEstadoRescatado())
+//                .estadoFavoritos(publicacion1.getEstadoFavoritos())
+//                .foto(publicacion1.getFoto())
+//                .build();
+//        return publicacionRepository.save(publicacion);
+//    }
 
     public List<Publicacion> obtenerTodasLasPublicaciones() {
         return publicacionRepository.findAll();
     }
+
     public List<Publicacion> obtenerPublicacionesPorTipo(TipoPublicacion tipo) {
         return publicacionRepository.findByTipoPublicacion(tipo);
     }
@@ -136,5 +143,110 @@ public class PublicacionService {
         }
         return publicacionesFiltradasF;
     }
+
+
+
+
+//////////////////
+
+    @Transactional
+    public Publicacion crearPublicacion(Publicacion publicacion1) {
+        BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
+        // Obtener el usuario autenticado
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Usuario usuario = usuarioService.findByUsername(username);
+
+        publicacion1.setFecha_publicacion(LocalDateTime.now());
+
+        Publicacion publicacion = Publicacion.builder()
+                .id(nuevaPublicacionId)
+                .nombre(publicacion1.getNombre())
+                .raza(publicacion1.getRaza())
+                .sexo(publicacion1.getSexo())
+                .tipoAnimal(publicacion1.getTipoAnimal())
+                .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
+                .tipoPublicacion(publicacion1.getTipoPublicacion())
+                .fecha_publicacion(publicacion1.getFecha_publicacion())
+                .fecha(publicacion1.getFecha())
+                .ubicacion(publicacion1.getUbicacion())
+                .estadoRescatado(publicacion1.getEstadoRescatado())
+                .estadoFavoritos(publicacion1.getEstadoFavoritos())
+                .foto(publicacion1.getFoto())
+                .usuario(usuario) // Asignar el usuario a la publicación
+                .build();
+        return publicacionRepository.save(publicacion);
+    }
+
+
+    //    public Publicacion crearPublicacion(Publicacion publicacion1) {
+//        BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
+//
+//        // Asignar automáticamente la fecha de publicación actual
+//        publicacion1.setFecha_publicacion(LocalDateTime.now());
+//
+//        // Creamos la nueva publicación manteniendo la fecha como String
+//        Publicacion publicacion = Publicacion.builder()
+//                .id(nuevaPublicacionId)
+//                .nombre(publicacion1.getNombre())
+//                .raza(publicacion1.getRaza())
+//                .sexo(publicacion1.getSexo())
+//                .tipoAnimal(publicacion1.getTipoAnimal())
+//                .descripcionEspecifica(publicacion1.getDescripcionEspecifica())
+//                .tipoPublicacion(publicacion1.getTipoPublicacion())
+//                .fecha(publicacion1.getFecha())
+//                .fecha_publicacion(publicacion1.getFecha_publicacion())
+//                .ubicacion(publicacion1.getUbicacion())
+//                .estadoRescatado(publicacion1.getEstadoRescatado())
+//                .estadoFavoritos(publicacion1.getEstadoFavoritos())
+//                .foto(publicacion1.getFoto())
+//                .build();
+//        return publicacionRepository.save(publicacion);
+//    }
+
+
+
+
+
+
+
+
+
+//    public List<Publicacion> obtenerTodasLasPublicaciones() {
+//        List<Publicacion> publicaciones = publicacionRepository.findAll();
+//        for (Publicacion publicacion : publicaciones) {
+//            Usuario usuario = publicacion.getUsuario();
+//            if (usuario != null) {
+//                // Cargar el nombre del usuario asociado a la publicación
+//                publicacion.setUsuario(usuarioService.findByUsername(usuario.getUsername()));
+//            }
+//        }
+//        return publicaciones;
+//    }
+
+    public List<Publicacion> obtenerTodasLasPublicacionesPorUsuario(String username) {
+        Usuario usuario = usuarioService.findByUsername(username);
+        if (usuario == null) {
+            throw new UsernameNotFoundException("Usuario no encontrado");
+        }
+        // Solo obtener las publicaciones asociadas al usuario sin la información del usuario
+        List<Publicacion> publicaciones = publicacionRepository.findByUsuario(usuario);
+        // Limpiar la información del usuario en cada publicación
+        publicaciones.forEach(publicacion -> publicacion.setUsuario(null));
+        return publicaciones;
+    }
+
+
+//    public List<Publicacion> obtenerTodasLasPublicacionesPorUsuario(String username) {
+//        Usuario usuario = usuarioService.findByUsername(username);
+//        if (usuario == null) {
+//            throw new UsernameNotFoundException("Usuario no encontrado");
+//        }
+//        List<Publicacion> publicaciones = publicacionRepository.findByUsuario(usuario);
+//        for (Publicacion publicacion : publicaciones) {
+//            publicacion.setUsuario(usuarioService.findByUsername(publicacion.getUsuario().getUsername()));
+//        }
+//        return publicaciones;
+//    }
 
 }

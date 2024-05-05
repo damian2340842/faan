@@ -34,4 +34,5 @@ public class Publicacion {
     private byte[] foto;
     private LocalDateTime fecha_publicacion;
 
+    Usuario usuario;
 }
