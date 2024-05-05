@@ -3,11 +3,14 @@ package com.example.faan.mongo.Controller;
 import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
+import com.example.faan.mongo.modelos.Usuario;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -132,5 +135,40 @@ public class PerdidosController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo PERDIDO");
         }
     }
+
+
+
+
+    @GetMapping("/MisPublicaciones")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<List<Publicacion>> listarPublicaciones() {
+        try {
+            // Obtener la autenticación actual
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            // Obtener el nombre de usuario del usuario autenticado
+            String username = authentication.getName();
+
+            // Obtener todas las publicaciones asociadas al usuario autenticado
+            List<Publicacion> publicaciones = publicacionService.obtenerTodasLasPublicacionesPorUsuario(username);
+
+            // Recorrer cada publicación para establecer el nombre y apellido del usuario
+            for (Publicacion publicacion : publicaciones) {
+                Usuario usuario = publicacion.getUsuario();
+                if (usuario != null) {
+                    // Crear un nuevo objeto de usuario solo con el nombre y apellido
+                    Usuario usuarioReducido = new Usuario();
+                    usuarioReducido.setNombre(usuario.getNombre());
+                    usuarioReducido.setApellido(usuario.getApellido());
+                    // Establecer el usuario reducido en la publicación
+                    publicacion.setUsuario(usuarioReducido);
+                }
+            }
+
+            return ResponseEntity.ok(publicaciones);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 
 }

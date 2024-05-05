@@ -2,6 +2,7 @@ package com.example.faan.mongo.Repository;
 
 import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
+import com.example.faan.mongo.modelos.Usuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +27,5 @@ public interface PublicacionRepository extends MongoRepository<Publicacion, Long
     List<Publicacion> findByEstadoRescatadoAndTipoPublicacion(boolean estadoRescatado, TipoPublicacion tipoPublicacion);
 
 
-
+    List<Publicacion> findByUsuario(Usuario usuario);
 }
