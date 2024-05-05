@@ -17,6 +17,8 @@ import com.example.faan.mongo.modelos.AuthResponse;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import static com.example.faan.mongo.modelos.EnumsFijo.Role.USER;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -47,6 +49,7 @@ public class AuthService {
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
                 .role(request.getRole())
+                .role(USER)
                 .email(request.getEmail())
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())

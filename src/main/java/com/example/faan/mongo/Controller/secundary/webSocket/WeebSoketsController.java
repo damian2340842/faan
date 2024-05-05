@@ -1,8 +1,5 @@
-package com.example.faan.mongo.Controller;
+package com.example.faan.mongo.Controller.secundary.webSocket;
 
-import com.example.faan.mongo.modelos.Publicacion;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -36,7 +33,7 @@ public class WeebSoketsController extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
         // Evento activado cuando se cierra la conexión WebSocket
-        System.out.println("Conexión cerrada.");
+        System.out.println("Conexión cerrada exitosamente.");
     }
 
 }

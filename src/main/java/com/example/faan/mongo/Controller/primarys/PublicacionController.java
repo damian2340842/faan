@@ -1,4 +1,4 @@
-package com.example.faan.mongo.Controller;
+package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
@@ -25,7 +25,7 @@ public class PublicacionController {
     }
 
 
-    //LISTAR PUBLICACIONES GENERAL
+    //METODO PARA LISTAR PUBLICACIONES GENERAL
     @GetMapping("/listar")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<Publicacion>> listarPublicaciones() {
@@ -36,18 +36,39 @@ public class PublicacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+    ///funciona correctamente
 
 
-    //LISTA RESCATADOS(ENCONTRADOS Y PERDIDOS)
+
+    // METODO PARA LA LISTA RESCATADOS(ENCONTRADOS Y PERDIDOS)
     @GetMapping("/listar/Rescatados")
-    public ResponseEntity<List<Publicacion>> listarPublicacionesRescatados() {
+    public ResponseEntity<?> listarPublicacionesRescatados() {
         List<Publicacion> publicacionesRescatadas = publicacionService.listarPublicacionesRescatadas();
+        if (publicacionesRescatadas.isEmpty()) {
+            // No se encontraron publicaciones, se puede retornar un mensaje de error o un status 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron publicaciones rescatadasw.");
+        }
+        return ResponseEntity.ok(publicacionesRescatadas);
+    }
+
+
+    // METODO PARA LA LISTA RESCATADOS(Rescatados y favoritos)
+    @GetMapping("/listar/Favoritos")
+    public ResponseEntity<?> listarPublicacionesFavoritos() {
+        List<Publicacion> todasLasPublicaciones = publicacionService.obtenerTodasLasPublicaciones();
+        List<Publicacion> publicacionesRescatadas = publicacionService.publicacionesConEstadoFavTrue(todasLasPublicaciones);
+
+        if (publicacionesRescatadas.isEmpty()) {
+            // No se encontraron publicaciones favoritas, se puede retornar un mensaje de error o un status 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron publicaciones favoritas.");
+        }
+
         return ResponseEntity.ok(publicacionesRescatadas);
     }
 
 
 
-    //GENERAL
+    //GUARDAR PUBLICACIONES EN GENERAL
     @PostMapping(path = "/guardarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
@@ -68,9 +89,11 @@ public class PublicacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al procesar la solicitud");
         }
     }
+    ///funciona correctamente
 
 
-    //actualiza todos tipo de publicaciones
+    //METODO PARA ACTUALIZAR TODO TIPO DE PUBLICACION
+
     @PutMapping("/actualizar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
@@ -81,9 +104,10 @@ public class PublicacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al actualizar la publicación");
         }
     }
+    //funciona correctamente
 
 
-//elimina todos tipo de publicaciones
+//METODO PARA ELIMINAR POR ID
     @DeleteMapping(path = "/eliminar/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> eliminarPublicacion(@PathVariable BigInteger id) {
@@ -100,26 +124,26 @@ public class PublicacionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación");
         }
     }
+    ///funciona correctamente
 
 
-
-    @GetMapping("/buscar/{id}")
-    public ResponseEntity<?> buscarPublicacionPorId(@PathVariable BigInteger id) {
-        try {
-            Publicacion publicacion = publicacionService.obtenerPublicacionPorId(id)
-                    .orElse(null);
-            if(publicacion != null) {
-                return ResponseEntity.ok(publicacion);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("No se encontró ninguna publicación con el ID proporcionado.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ocurrió un error al procesar la solicitud.");
+///METODO PARA BUSCAR POR ID
+@GetMapping("/buscar/{id}")
+public ResponseEntity<?> buscarPublicacionPorId(@PathVariable BigInteger id) {
+    try {
+        Optional<Publicacion> publicacionOpt = publicacionService.obtenerPublicacionPorId(id);
+        if (publicacionOpt.isPresent()) {
+            return ResponseEntity.ok(publicacionOpt.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la publicación con el ID seleccionado.");
         }
+    } catch (Exception e) {
+        // Optionally, you can include a more descriptive message or log the error
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
+    ///funciona correctamente
 
 
     //filtrado por nombre,raza,fecha

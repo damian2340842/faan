@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-@Document(collection = "Publicaciones")
+@Document(collection = "publicaciones")
 public class Publicacion {
 
     @Id
@@ -29,7 +29,10 @@ public class Publicacion {
     private String fecha; // Cambiado a tipo String
     private String ubicacion;
     private Boolean estadoRescatado;
+    private Boolean estadoFavoritos;
+
     private byte[] foto;
     private LocalDateTime fecha_publicacion;
 
+    Usuario usuario;
 }
