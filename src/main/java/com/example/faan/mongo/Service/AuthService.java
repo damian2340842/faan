@@ -17,6 +17,8 @@ import com.example.faan.mongo.modelos.AuthResponse;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import static com.example.faan.mongo.modelos.EnumsFijo.Role.USER;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -46,7 +48,8 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
-                .role(request.getRole())
+                //.role(request.getRole())
+                .role(USER)
                 .email(request.getEmail())
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())
@@ -57,10 +60,11 @@ public class AuthService {
         String token = jwtService.getToken(usuario); // Obtener el token JWT
 
         // Crear un objeto AuthResponseDTO con el token y el nombre de usuario
-        return AuthResponse.builder()
+        AuthResponse build = AuthResponse.builder()
                 .token(token)
                 .username(usuario.getUsername()) // Usar el método getter generado por Lombok
                 .build();
+        return build;
     }
 
 
