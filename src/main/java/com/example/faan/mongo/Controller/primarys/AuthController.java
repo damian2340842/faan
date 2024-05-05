@@ -1,4 +1,4 @@
-package com.example.faan.mongo.Controller;
+package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Repository.UsuarioRepository;
 import com.example.faan.mongo.Service.AuthService;
@@ -30,16 +30,16 @@ public class AuthController {
     private final CounterService counterService;
 
 
-
+/// METODO PARA INICIAR SESIÓN
     @PostMapping("/signin")
     public ResponseEntity<Map<String, String>> movilSignIn(@RequestBody LoginRequest loginRequest) {
         try {
             AuthResponse authResponse = authService.login(loginRequest);
             Usuario usuario = usuarioRepository.findByUsername(loginRequest.getUsername())
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
 
             if (authResponse == null || authResponse.getToken() == null) {
-                throw new RuntimeException("Error al iniciar sesión");
+                throw new RuntimeException("Error al iniciar sesión.");
             }
 
             Map<String, String> response = new HashMap<>();
@@ -50,7 +50,10 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Credenciales incorrectas"));
         }
     }
+    /// funciona correctamente
 
+
+    ///METODO PARA REGISTAR
     @PostMapping("/register")
     private ResponseEntity<AuthResponse> register(@RequestBody Usuario usuario) {
         try {
@@ -60,7 +63,7 @@ public class AuthController {
             if (authService.isusernameAlreadyRegistered(username)) {
                 // Aquí, en lugar de pasar null, deberías pasar el objeto Usuario existente.
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new AuthResponse("El nombre de usuario ya está registrado", username));
+                        .body(new AuthResponse("El nombre de usuario ya está registrado.", username));
             }
 
             return ResponseEntity.ok(authService.register(usuario));
@@ -68,16 +71,17 @@ public class AuthController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new AuthResponse("Error en el registro", null));
+                    .body(new AuthResponse("Error en el registro.", null));
         }
     }
+    //// funciona correctamente
 
-
-
-
+    /// METODO PARA SALIR
     @PostMapping("/signout")
     public ResponseEntity<String> signOut(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         return ResponseEntity.ok("Sesión cerrada correctamente.");
 }
+///funciona correctamente
+
 }

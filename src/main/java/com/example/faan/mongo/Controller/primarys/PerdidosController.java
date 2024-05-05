@@ -1,4 +1,4 @@
-package com.example.faan.mongo.Controller;
+package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
@@ -26,13 +26,13 @@ public class PerdidosController {
         this.messagingTemplate = messagingTemplate;
     }
 
-
+/// METODO PARA GUARDAR ANIMALES PERDIDOS
     @PostMapping(path = "/guardarPerdidos")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
         try {
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe.");
             }
 
             publicacion.setTipoPublicacion(TipoPublicacion.PERDIDO);
@@ -40,27 +40,28 @@ public class PerdidosController {
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
-                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación tipo perdido creada exitosamente");
+                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación de tipo perdido creada exitosamente.");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Se produjo un error al crear la publicación.");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al procesar la solicitud");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al procesar la solicitud.");
         }
     }
+    ///agregar validaciones, para que no permita guardar la misma publicacion dos veces.
 
 
-
-
+// METODO PARA ENLISTAR LOS ANMALES EN ESTADO DE PERDIDO
     @GetMapping("/listar/perdidas")
     public ResponseEntity<List<Publicacion>> listarPublicacionesPerdidas() {
         List<Publicacion> publicacionesPerdidas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
         List<Publicacion> publicacionesPerdidasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesPerdidas);
         return ResponseEntity.ok(publicacionesPerdidasFiltradas);
     }
+    // funciona correctamente.
 
 
-
+    ///METODO PARA ACTUALIZAR PERDIDOS CON EL ID
     @PutMapping("/actualizarPerdidos/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacionPerdidos(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
@@ -68,7 +69,7 @@ public class PerdidosController {
             // Verificar si la publicación existe y es del tipo "ENCONTRADO"
             Optional<Publicacion> publicacionEncontradaOptional = publicacionService.obtenerPublicacionPorId(id);
             if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.PERDIDO)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo perdido");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo perdido.");
             }
             Publicacion publicacionExistente = publicacionEncontradaOptional.get();
 
@@ -110,27 +111,32 @@ public class PerdidosController {
             publicacionExistente.setFoto(publicacion.getFoto());
             // Actualizar la publicación
             publicacionService.actualizarPublicacion(id, publicacionExistente);
-            return ResponseEntity.ok("Publicación actualizada exitosamente");
+            return ResponseEntity.ok("Publicación actualizada exitosamente.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al actualizar la publicación");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Se produjo un error al actualizar la publicación.");
         }
     }
+    //funciona correctamente
 
+
+    ///METODO PARA ELIMINAR PUBLICACION DE TIPO
     @DeleteMapping(path = "/eliminar/perdidos/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> eliminarPublicacionPerdido(@PathVariable BigInteger id) {
         try {
             Optional<Publicacion> publicacionOptional = publicacionService.obtenerPublicacionPorId(id);
             if (!publicacionOptional.isPresent() || publicacionOptional.get().getTipoPublicacion() != TipoPublicacion.PERDIDO) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación de tipo PERDIDO con el ID: " + id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación de tipo PERDIDO con el ID especificado." + id);
             }
 
             publicacionService.eliminarPublicacion(id);
 
-            return ResponseEntity.status(HttpStatus.OK).body("Publicación de tipo PERDIDO eliminada exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).body("Publicación de tipo PERDIDO eliminada exitosamente.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo PERDIDO");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo PERDIDO.");
         }
     }
+    /// funciona correctamente
+
 
 }

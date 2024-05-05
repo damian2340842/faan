@@ -1,4 +1,4 @@
-package com.example.faan.mongo.Controller;
+package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
@@ -24,6 +24,8 @@ public class EncontradosController {
         this.publicacionService = publicacionService;
         this.messagingTemplate = messagingTemplate;
     }
+
+    ///METODO PARA ENLISTAR LOS ENCONTRADOS
     @GetMapping("/listar/encontradas")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 
@@ -32,14 +34,16 @@ public class EncontradosController {
         List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);
         return ResponseEntity.ok(publicacionesEncontradasFiltradas);
     }
+    ///funciona correctamente
 
 
+//// METODO PARA GUARDAR ENCONTRADOS
     @PostMapping(path = "/guardarEncontrados")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
         try {
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe.");
             }
 
             // Establecer el tipo de publicación como "ENCONTRADO" por defecto
@@ -49,16 +53,18 @@ public class EncontradosController {
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
-                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación tipo encontrado creada exitosamente");
+                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación de tipo 'encontrado' creada exitosamente.");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Se produjo un error al crear la publicación.");
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al procesar la solicitud");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Se produjo un error al procesar la solicitud.");
         }
     }
+    /// validar para que no perimita guardar dos veces el mismo
 
 
+////METODO PARA ACTUALZIAR ENCONTRADOS POR ID
     @PutMapping("/actualizarEncontradas/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacionencontrados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
@@ -66,7 +72,7 @@ public class EncontradosController {
             // Verificar si la publicación existe y es del tipo "ENCONTRADO"
             Optional<Publicacion> publicacionEncontradaOptional = publicacionService.obtenerPublicacionPorId(id);
             if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.ENCONTRADO)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo ENCONTRADO");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La publicación no existe o no es del tipo ENCONTRADO.");
             }
             Publicacion publicacionExistente = publicacionEncontradaOptional.get();
 
@@ -108,28 +114,33 @@ public class EncontradosController {
             publicacionExistente.setFoto(publicacion.getFoto());
             // Actualizar la publicación
             publicacionService.actualizarPublicacion(id, publicacionExistente);
-            return ResponseEntity.ok("Publicación actualizada exitosamente");
+            return ResponseEntity.ok("Publicación actualizada exitosamente.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al actualizar la publicación");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Se produjo un error al actualizar la publicación.");
         }
     }
+    ///funciona correctamente.
 
+
+////METODO PARA ELIMINAR ENCONTRADOS POR ID
     @DeleteMapping(path = "/eliminar/encontrados/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> eliminarPublicacionEncontrada(@PathVariable BigInteger id) {
         try {
             Optional<Publicacion> publicacionOptional = publicacionService.obtenerPublicacionPorId(id);
             if (!publicacionOptional.isPresent() || publicacionOptional.get().getTipoPublicacion() != TipoPublicacion.ENCONTRADO) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación de tipo ENCONTRADO con el ID: " + id);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna publicación de tipo ENCONTRADO con el ID especificado." + id);
             }
 
             publicacionService.eliminarPublicacion(id);
 
-            return ResponseEntity.status(HttpStatus.OK).body("Publicación de tipo ENCONTRADO eliminada exitosamente");
+            return ResponseEntity.status(HttpStatus.OK).body("Publicación de tipo ENCONTRADO eliminada exitosamente.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo ENCONTRADO");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo ENCONTRADO.");
         }
     }
+    ////funciona correctamente
+
 
 
 }
