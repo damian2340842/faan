@@ -3,6 +3,7 @@ package com.example.faan.mongo.Controller.primarys;
 import com.example.faan.mongo.Repository.UsuarioRepository;
 import com.example.faan.mongo.Service.AuthService;
 import com.example.faan.mongo.Service.CounterService;
+import com.example.faan.mongo.Validaciones.Validacion_Usuario;
 import com.example.faan.mongo.modelos.AuthResponse;
 import com.example.faan.mongo.modelos.LoginRequest;
 import com.example.faan.mongo.modelos.Usuario;
@@ -17,7 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = {"http://localhost:4200", "http://10.0.2.2:8080"})
@@ -25,12 +25,11 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-        private final UsuarioRepository usuarioRepository;
-
+    private final UsuarioRepository usuarioRepository;
     private final CounterService counterService;
+    private final Validacion_Usuario validacionUsuario;
 
-
-/// METODO PARA INICIAR SESIÓN
+    /// METODO PARA INICIAR SESIÓN
     @PostMapping("/signin")
     public ResponseEntity<Map<String, String>> movilSignIn(@RequestBody LoginRequest loginRequest) {
         try {
@@ -50,38 +49,66 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Credenciales incorrectas"));
         }
     }
-    /// funciona correctamente
 
-
-    ///METODO PARA REGISTAR
+    ///METODO PARA REGISTRAR
     @PostMapping("/register")
     private ResponseEntity<AuthResponse> register(@RequestBody Usuario usuario) {
         try {
-            String username = usuario.getUsername();
-            String email = usuario.getEmail();
+            // Aplicar validaciones
+            String nombreError = validacionUsuario.validateNombre("Nombre", usuario.getNombre());
+            if (nombreError != null) {
+                return ResponseEntity.badRequest().body(new AuthResponse(nombreError, null));
+            }
 
-            if (authService.isusernameAlreadyRegistered(username)) {
+            String apellidoError = validacionUsuario.validateApellido("Apellido", usuario.getApellido());
+            if (apellidoError != null) {
+                return ResponseEntity.badRequest().body(new AuthResponse(apellidoError, null));
+            }
+
+            String usernameError = validacionUsuario.validateUsername("Username", usuario.getUsername());
+            if (usernameError != null) {
+                return ResponseEntity.badRequest().body(new AuthResponse(usernameError, null));
+            }
+
+            String passwordError = validacionUsuario.validatePassword("Contraseña", usuario.getPassword());
+            if (passwordError != null) {
+                return ResponseEntity.badRequest().body(new AuthResponse(passwordError, null));
+            }
+
+            String emailError = validacionUsuario.validateEmail(usuario.getEmail());
+            if (emailError != null) {
+                return ResponseEntity.badRequest().body(new AuthResponse(emailError, null));
+            }
+
+            String direccionError = validacionUsuario.validateDireccion("Dirección", usuario.getDireccion());
+            if (direccionError != null) {
+                return ResponseEntity.badRequest().body(new AuthResponse(direccionError, null));
+            }
+
+            String telefonoError = validacionUsuario.validateTelefono("Teléfono", usuario.getTelefono());
+            if (telefonoError != null) {
+                return ResponseEntity.badRequest().body(new AuthResponse(telefonoError, null));
+            }
+
+            // Registrar usuario si todas las validaciones son exitosas
+            if (authService.isusernameAlreadyRegistered(usuario.getUsername())) {
                 // Aquí, en lugar de pasar null, deberías pasar el objeto Usuario existente.
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new AuthResponse("El nombre de usuario ya está registrado.", username));
+                        .body(new AuthResponse("El nombre de usuario ya está registrado.", usuario.getUsername()));
             }
 
             return ResponseEntity.ok(authService.register(usuario));
-
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new AuthResponse("Error en el registro.", null));
         }
     }
-    //// funciona correctamente
 
     /// METODO PARA SALIR
     @PostMapping("/signout")
     public ResponseEntity<String> signOut(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         return ResponseEntity.ok("Sesión cerrada correctamente.");
-}
-///funciona correctamente
-
+    }
 }
