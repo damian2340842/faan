@@ -7,27 +7,54 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/notificaciones")
 public class NotificacionController {
 
     @Autowired
     private NotificacionService notificacionService;
 
-    @PostMapping("/notificaciones/save")
-    public ResponseEntity<Notificacion> save(@RequestBody Notificacion notificacion) {
-        return new ResponseEntity<>(notificacionService.save(notificacion), HttpStatus.CREATED);
+    @PostMapping("/guardar")
+    public ResponseEntity<?> save(@RequestBody Notificacion notificacion) {
+        try {
+            Notificacion savedNotificacion = notificacionService.save(notificacion);
+            return ResponseEntity.status(HttpStatus.CREATED).body("La notificación se ha guardado exitosamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo guardar la notificación. Por favor, inténtelo de nuevo más tarde.");
+        }
     }
 
-    @GetMapping("/findById/{id}") // Corrección en la ruta completa
-    public ResponseEntity<Notificacion> findById(@PathVariable("id") String id) {
-        return new ResponseEntity<>(notificacionService.findById(id), HttpStatus.OK);
+
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<?> findById2(@PathVariable("id") String id) {
+        try {
+            Notificacion notificacion = notificacionService.findById(id);
+            if (notificacion != null) {
+
+                return ResponseEntity.status(HttpStatus.OK).body(notificacion);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna notificación con el ID: " + id);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo guardar la notificación. Por favor, inténtelo de nuevo más tarde.");
     }
 
-    @GetMapping("/updateEstado/notificaciones/{id}") // Corrección en la ruta completa
-    public ResponseEntity<Notificacion> updateEstado(@PathVariable("id") String id) {
-        Notificacion notificacion = notificacionService.findById(id);
-        return new ResponseEntity<>(notificacionService.update(id, null), HttpStatus.OK);
+
+    @PutMapping("/updateEstado/{id}")
+    public ResponseEntity<?> updateEstado(@PathVariable("id") String id, @RequestBody Notificacion notificacion) {
+        try {
+            // Verificar si la notificación con el ID proporcionado existe
+            Notificacion notificacionExistente = notificacionService.findById(id);
+            if (notificacionExistente != null) {
+                // Actualizar el estado de la notificación
+                Notificacion notificacionActualizada = notificacionService.update(id, notificacion);
+                return ResponseEntity.status(HttpStatus.OK).body("Notificacion actualizada.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna notificación con el ID: " + id);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo guardar la notificación. Por favor, inténtelo de nuevo más tarde.");
     }
+
+
 }

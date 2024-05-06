@@ -20,9 +20,11 @@ public class NotificacionServiceImpl implements NotificacionService {
     public Notificacion update(String id, Notificacion notificacion) {
         Notificacion notificacionFound = notificacionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notificación no encontrada con ID: " + id));
-        notificacionFound.setEstadoMensaje("V");
+        notificacionFound.setEstadoMensaje(notificacion.getEstadoMensaje());
         return notificacionRepository.save(notificacionFound);
     }
+
+
 
     @Override
     public Notificacion findById(String id) {
