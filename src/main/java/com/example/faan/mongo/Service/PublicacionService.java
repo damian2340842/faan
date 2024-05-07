@@ -173,6 +173,7 @@ public class PublicacionService {
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .estadoFavoritos(publicacion1.getEstadoFavoritos())
                 .foto(publicacion1.getFoto())
+                .usuario(usuario)
                 .build();
         return publicacionRepository.save(publicacion);
     }
