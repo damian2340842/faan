@@ -208,4 +208,17 @@ public class PublicacionService {
         return false;
     }
 
+    public List<Publicacion> buscarPublicaciones(String nombre, String raza, String fecha) {
+        if (nombre != null && !nombre.isEmpty()) {
+            return publicacionRepository.findByNombre(nombre);
+        } else if (raza != null && !raza.isEmpty()) {
+            return publicacionRepository.findByRaza(raza);
+        } else if (fecha != null && !fecha.isEmpty()) {
+            return publicacionRepository.findByFecha(fecha);
+        } else {
+
+            return publicacionRepository.findAll();
+        }
+    }
+
 }

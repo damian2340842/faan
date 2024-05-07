@@ -183,8 +183,16 @@ public ResponseEntity<?> buscarPublicacionPorId(@PathVariable BigInteger id) {
     ///funciona correctamente
 
 
-    //filtrado por nombre,raza,fecha
-
+    //BUSQUEDA POR NOMBRE, RAZA, FECHA
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Publicacion>> buscarPublicaciones(
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String raza,
+            @RequestParam(required = false) String fecha
+            ){
+        List<Publicacion> publicaciones = publicacionService.buscarPublicaciones(nombre, raza, fecha);
+        return ResponseEntity.ok(publicaciones);
+    }
 
 
 

@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface PublicacionRepository extends MongoRepository<Publicacion, Long> {
 
     List<Publicacion> findByNombre(String nombre);
+    List<Publicacion> findByRaza(String raza);
+    List<Publicacion> findByFecha(String fecha);
 
     Optional<Publicacion> findById(BigInteger id);
 
@@ -26,6 +28,8 @@ public interface PublicacionRepository extends MongoRepository<Publicacion, Long
     List<Publicacion> findByEstadoFavoritos(boolean estadoFavorito);
     List<Publicacion> findByEstadoRescatadoAndTipoPublicacion(boolean estadoRescatado, TipoPublicacion tipoPublicacion);
 
-
     List<Publicacion> findByUsuario(Usuario usuario);
+
+
+
 }
