@@ -25,9 +25,9 @@ public class Usuario implements UserDetails {
     private BigInteger id;
     private String verificationToken;
     private String nombre;
+    private String apellido;
     private String username;
     private String password;
-    private String apellido;
     private String direccion;
     private String telefono;
     private String email;
@@ -60,6 +60,9 @@ public class Usuario implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+    public Role getRole() {
+        return this.role;
     }
 
 }

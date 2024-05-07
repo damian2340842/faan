@@ -35,6 +35,10 @@ public class PerdidosController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe.");
             }
 
+            if (publicacionService.existePublicacionDuplicada(publicacion)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No puede duplicar exactamente la publicacion. Cambie al menos un dato");
+            }
+
             publicacion.setTipoPublicacion(TipoPublicacion.PERDIDO);
 
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
@@ -52,7 +56,7 @@ public class PerdidosController {
 
 
 // METODO PARA ENLISTAR LOS ANMALES EN ESTADO DE PERDIDO
-    @GetMapping("/listar/perdidas")
+    @GetMapping("/listar/perdidos")
     public ResponseEntity<List<Publicacion>> listarPublicacionesPerdidas() {
         List<Publicacion> publicacionesPerdidas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
         List<Publicacion> publicacionesPerdidasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesPerdidas);

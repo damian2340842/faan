@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -90,9 +91,7 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(new AuthResponse(telefonoError, null));
             }
 
-            // Registrar usuario si todas las validaciones son exitosas
             if (authService.isusernameAlreadyRegistered(usuario.getUsername())) {
-                // Aquí, en lugar de pasar null, deberías pasar el objeto Usuario existente.
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new AuthResponse("El nombre de usuario ya está registrado.", usuario.getUsername()));
             }
@@ -111,4 +110,6 @@ public class AuthController {
         request.getSession().invalidate();
         return ResponseEntity.ok("Sesión cerrada correctamente.");
     }
+
+
 }

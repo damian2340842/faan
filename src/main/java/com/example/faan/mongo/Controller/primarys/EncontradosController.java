@@ -46,7 +46,10 @@ public class EncontradosController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe.");
             }
 
-            // Establecer el tipo de publicación como "ENCONTRADO" por defecto
+            if (publicacionService.existePublicacionDuplicada(publicacion)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No puede duplicar exactamente la publicacion. Cambie al menos un dato");
+            }
+
             publicacion.setTipoPublicacion(TipoPublicacion.ENCONTRADO);
             publicacion.setEstadoRescatado(false);
             publicacion.setEstadoFavoritos(false);
@@ -65,7 +68,7 @@ public class EncontradosController {
 
 
 ////METODO PARA ACTUALZIAR ENCONTRADOS POR ID
-    @PutMapping("/actualizarEncontradas/{id}")
+    @PutMapping("/actualizarEncontrados/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacionencontrados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {

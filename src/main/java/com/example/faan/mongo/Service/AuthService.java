@@ -3,6 +3,7 @@ package com.example.faan.mongo.Service;
 import com.example.faan.mongo.Repository.UsuarioRepository;
 import com.example.faan.mongo.jwt.JwtService;
 import com.example.faan.mongo.modelos.AuthResponse;
+import com.example.faan.mongo.modelos.EnumsFijo.Role;
 import com.example.faan.mongo.modelos.LoginRequest;
 import com.example.faan.mongo.modelos.Usuario;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,12 @@ public class AuthService {
 
     public AuthResponse register(Usuario request) {
         BigInteger newUserId = counterService.getNextSequence("usuario_id");
+
+        // Verificar si ya existe un usuario con el rol ADMIN
+        boolean isAdminAlreadyRegistered = usuarioRepository.existsByRole(Role.ADMIN);
+        // Si ya hay un ADMIN registrado, cambiar el rol a USER
+        Role role = isAdminAlreadyRegistered ? Role.USER : Role.ADMIN;
+
         Usuario usuario = Usuario.builder()
                 .id(newUserId)
                 .username(request.getUsername())
@@ -49,7 +56,7 @@ public class AuthService {
                 .nombre(request.getNombre())
                 .apellido(request.getApellido())
                 .role(request.getRole())
-                .role(USER)
+                .role(role)
                 .email(request.getEmail())
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())

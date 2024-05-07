@@ -1,5 +1,6 @@
 package com.example.faan.mongo.Repository;
 
+import com.example.faan.mongo.modelos.EnumsFijo.Role;
 import com.example.faan.mongo.modelos.Usuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -14,10 +15,7 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
     Usuario findByEmailAndUsername(String email, String username);
     Usuario findByVerificationToken(String verificationToken);
 
-
-
-
-
+    boolean existsByRole(Role role);
 
     public Usuario findByEmail(String email);
 

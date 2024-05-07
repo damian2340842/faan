@@ -53,6 +53,10 @@ public class AdoptadosControllers {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe.");
             }
 
+            if (publicacionService.existePublicacionDuplicada(publicacion)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No puede duplicar exactamente la publicacion. Cambie al menos un dato");
+            }
+
             // Establecer el tipo de publicación como "ENCONTRADO" por defecto
             publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
             publicacion.setEstadoRescatado(false);
@@ -72,7 +76,7 @@ public class AdoptadosControllers {
 
 
     ///METODO PARA ACTUALIZAR ADOPTADOS POR ID
-    @PutMapping("/actualizarAdontados/{id}")
+    @PutMapping("/actualizarAdoptados/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacionadoptados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
@@ -89,7 +93,6 @@ public class AdoptadosControllers {
             }
             Publicacion publicacionExistente = publicacionEncontradaOptional.get();
 
-            // Fusionar los campos del cuerpo de la solicitud con los campos existentes de la publicación
             if (publicacion.getNombre() != null) {
                 publicacionExistente.setNombre(publicacion.getNombre());
             }

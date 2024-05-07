@@ -24,10 +24,6 @@ public class UsuarioService {
         return optionalUsuario.orElse(null);
     }
 
-    public List<Usuario> findAllUsuarios() {
-        return usuarioRepository.findAll();
-    }
-
 
     public Usuario findByPersonaEmail(String identificacion) {
         return usuarioRepository.findByEmail(identificacion);
@@ -35,6 +31,33 @@ public class UsuarioService {
 
     public Usuario findByTokenPassword(String tokenPassword) {
         return usuarioRepository.findByTokenPassword(tokenPassword);
+    }
+
+
+    public void actualizarUsuario(String id, Usuario usuario) {
+        Optional<Usuario> usuarioExistenteOptional = usuarioRepository.findById(id);
+        if (usuarioExistenteOptional.isPresent()) {
+            Usuario usuarioExistente = usuarioExistenteOptional.get();
+            usuarioExistente.setNombre(usuario.getNombre());
+            usuarioExistente.setApellido(usuario.getApellido());
+            usuarioExistente.setUsername(usuario.getUsername());
+            usuarioExistente.setPassword(usuario.getPassword());
+            usuarioExistente.setEmail(usuario.getEmail());
+            usuarioExistente.setDireccion(usuario.getDireccion());
+            usuarioExistente.setTelefono(usuario.getTelefono());
+            usuarioExistente.setFoto(usuario.getFoto());
+            usuarioRepository.save(usuarioExistente);
+        } else {
+            throw new RuntimeException("Usuario no encontrado con el ID: " + id);
+        }
+    }
+
+    public void eliminarUsuario(String id) {
+        usuarioRepository.deleteById(id);
+    }
+
+    public Optional<Usuario> obtenerUsuarioPorId(String id) {
+        return usuarioRepository.findById(id);
     }
 
 }

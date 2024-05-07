@@ -2,12 +2,14 @@ package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Service.PublicacionService;
 import com.example.faan.mongo.modelos.Publicacion;
+import com.example.faan.mongo.modelos.Usuario;
 import jakarta.validation.Valid;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
-
+import org.springframework.security.core.Authentication;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -67,8 +69,39 @@ public class PublicacionController {
     }
 
 
+    //LISTAR TODAS MIS PUBLICACIONES SUBIDAS
+    @GetMapping("/MisPublicaciones")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<List<Publicacion>> listarPublicacionesM() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
 
-    //GUARDAR PUBLICACIONES EN GENERAL
+            // Obtener todas las publicaciones asociadas al usuario autenticado
+            List<Publicacion> publicaciones = publicacionService.obtenerTodasLasPublicacionesPorUsuario(username);
+
+            // Recorrer cada publicación para establecer el nombre y apellido del usuario
+            for (Publicacion publicacion : publicaciones) {
+                Usuario usuario = publicacion.getUsuario();
+                if (usuario != null) {
+                    Usuario usuarioReducido = new Usuario();
+                    usuarioReducido.setNombre(usuario.getNombre());
+                    usuarioReducido.setApellido(usuario.getApellido());
+                    publicacion.setUsuario(usuarioReducido);
+                }
+            }
+
+            return ResponseEntity.ok(publicaciones);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+
+
+
+    //GUARDAR PUBLICACIONES EN GENERAL ----- SOLO PARA PRUEBAS!!
     @PostMapping(path = "/guardarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
@@ -76,6 +109,11 @@ public class PublicacionController {
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
             }
+
+            if (publicacionService.existePublicacionDuplicada(publicacion)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No puede duplicar exactamente la publicacion. Cambie al menos un dato");
+            }
+
 
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
             if (nuevaPublicacion != null) {
@@ -138,7 +176,6 @@ public ResponseEntity<?> buscarPublicacionPorId(@PathVariable BigInteger id) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la publicación con el ID seleccionado.");
         }
     } catch (Exception e) {
-        // Optionally, you can include a more descriptive message or log the error
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
