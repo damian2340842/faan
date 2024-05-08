@@ -1,6 +1,7 @@
 package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Service.PublicacionService;
+import com.example.faan.mongo.exception.ObjectNotFoundException;
 import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import jakarta.validation.Valid;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -110,9 +112,6 @@ public class PerdidosController {
             if (estadoFavoritos != null) {
                 publicacionExistente.setEstadoFavoritos(publicacion.getEstadoFavoritos());
             }
-            if (publicacion.getFoto() != null) {
-            }
-            publicacionExistente.setFoto(publicacion.getFoto());
             // Actualizar la publicación
             publicacionService.actualizarPublicacion(id, publicacionExistente);
             return ResponseEntity.ok("Publicación actualizada exitosamente.");
@@ -121,7 +120,6 @@ public class PerdidosController {
         }
     }
     //funciona correctamente
-
 
     ///METODO PARA ELIMINAR PUBLICACION DE TIPO
     @DeleteMapping(path = "/eliminar/perdidos/{id}")

@@ -60,7 +60,6 @@ public class AuthService {
                 .email(request.getEmail())
                 .direccion(request.getDireccion())
                 .telefono(request.getTelefono())
-                .foto(request.getFoto())
                 .build();
         usuarioRepository.save(usuario);
 

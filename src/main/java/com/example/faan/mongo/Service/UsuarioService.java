@@ -45,7 +45,6 @@ public class UsuarioService {
             usuarioExistente.setEmail(usuario.getEmail());
             usuarioExistente.setDireccion(usuario.getDireccion());
             usuarioExistente.setTelefono(usuario.getTelefono());
-            usuarioExistente.setFoto(usuario.getFoto());
             usuarioRepository.save(usuarioExistente);
         } else {
             throw new RuntimeException("Usuario no encontrado con el ID: " + id);

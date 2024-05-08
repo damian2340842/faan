@@ -84,7 +84,6 @@ public class PublicacionService {
             publicacion.setUbicacion(nuevaPublicacion.getUbicacion());
             publicacion.setEstadoRescatado(nuevaPublicacion.getEstadoRescatado());
             publicacion.setEstadoFavoritos(nuevaPublicacion.getEstadoFavoritos());
-            publicacion.setFoto(nuevaPublicacion.getFoto());
             // Puedes agregar aquí más campos para actualizar si tienes más campos en el modelo de publicación.
             return publicacionRepository.save(publicacion);
         } else {
@@ -172,7 +171,6 @@ public class PublicacionService {
                 .ubicacion(publicacion1.getUbicacion())
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .estadoFavoritos(publicacion1.getEstadoFavoritos())
-                .foto(publicacion1.getFoto())
                 .usuario(usuario)
                 .build();
         return publicacionRepository.save(publicacion);

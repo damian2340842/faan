@@ -1,9 +1,12 @@
 package com.example.faan.mongo.modelos;
 
+import com.example.faan.mongo.file.model.entity.Photo;
 import com.example.faan.mongo.modelos.EnumsFijo.Role;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +34,9 @@ public class Usuario implements UserDetails {
     private String direccion;
     private String telefono;
     private String email;
-    private byte[]  foto;
+
+    @DBRef
+    private Photo photo;
 
     private Role role;
 
@@ -59,10 +64,6 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
-    public Role getRole() {
-        return this.role;
-    }
-
 }

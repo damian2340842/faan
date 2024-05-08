@@ -1,9 +1,11 @@
 package com.example.faan.mongo.modelos;
 
+import com.example.faan.mongo.file.model.entity.Photo;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoAnimal;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigInteger;
@@ -31,7 +33,8 @@ public class Publicacion {
     private Boolean estadoRescatado;
     private Boolean estadoFavoritos;
 
-    private byte[] foto;
+    @DBRef
+    private Photo photo;
     private LocalDateTime fecha_publicacion;
 
     Usuario usuario;

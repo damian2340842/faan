@@ -62,10 +62,6 @@ public class UsersController {
                 usuarioExistente.setEmail(usuario.getEmail());
             }
 
-            if (usuario.getFoto() != null) {
-                usuarioExistente.setFoto(usuario.getFoto());
-            }
-
             if (usuario.getRole() == null) {
                 usuario.setRole(usuarioExistente.getRole());
             }
@@ -79,7 +75,13 @@ public class UsersController {
         }
     }
 
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("/obtenerUser/{username}")
+    public ResponseEntity<Usuario> obtenerUsuarioPorUsername(@PathVariable String username) {
+        Usuario usuarioOptional = usuarioService.findByUsername(username);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(usuarioOptional);
+    }
 
     //METODO PARA ELIMINAR USUARIOS ---- SOLO ADMIN
     @DeleteMapping("/eliminarUser/{id}")

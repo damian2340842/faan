@@ -112,9 +112,6 @@ public class EncontradosController {
             if (estadoFavoritos != null) {
                 publicacionExistente.setEstadoFavoritos(publicacion.getEstadoFavoritos());
             }
-            if (publicacion.getFoto() != null) {
-            }
-            publicacionExistente.setFoto(publicacion.getFoto());
             // Actualizar la publicación
             publicacionService.actualizarPublicacion(id, publicacionExistente);
             return ResponseEntity.ok("Publicación actualizada exitosamente.");
