@@ -42,7 +42,7 @@ public class JwtService {
         }
 
         return jwtBuilder
-                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
