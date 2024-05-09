@@ -17,6 +17,9 @@ public interface IPhotoService {
 
     public PhotoResponse updatePostReference(Long id, MultipartFile file) throws IOException;
 
+    //This method is to update the post(Second simplify collection) photo
+    public PhotoResponse updatePostReference(String id, MultipartFile file) throws IOException;
+
     public PhotoResponse updateUserReference(String username, MultipartFile file) throws IOException;
 
     public AuthResponse registerUserWithPhoto(Usuario usuario, MultipartFile file) throws IOException;

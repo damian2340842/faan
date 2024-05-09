@@ -49,6 +49,12 @@ public class PhotoController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PutMapping("/update-simplified-post/{id}")
+    public ResponseEntity<?> updateSimplifiedPhotoInPost(@PathVariable String id, @RequestParam("photo") MultipartFile photo) throws IOException {
+        return ResponseEntity.status(HttpStatus.OK).body(photoService.updatePostReference(id, photo));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("/update-user/{username}")
     public ResponseEntity<?> updatePhotoInUser(@PathVariable String username, @RequestParam("photo") MultipartFile photo) throws IOException {
         return ResponseEntity.status(HttpStatus.OK).body(photoService.updateUserReference(username, photo));

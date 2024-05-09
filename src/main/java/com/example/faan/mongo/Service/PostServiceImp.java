@@ -39,7 +39,7 @@ public class PostServiceImp implements IPostService {
             throw new DuplicatedObjectFoundException("Ya existe una publicación con el mismo título en los últimos 60 segundos");
         }
 
-        return postRepository.insert(post);
+        return postRepository.save(post);
     }
 
     @Override

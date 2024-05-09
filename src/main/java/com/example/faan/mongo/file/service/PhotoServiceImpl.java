@@ -67,6 +67,7 @@ public class PhotoServiceImpl implements IPhotoService {
         String fileHash = calculateHash(fileBytes);
 
         Photo existingPhoto = photoRepository.findByImageHash(fileHash);
+
         if (existingPhoto != null) {
             return new PhotoResponse("Photo already exists", existingPhoto);
         }
@@ -94,7 +95,7 @@ public class PhotoServiceImpl implements IPhotoService {
     public PhotoResponse updatePostReference(Long id, MultipartFile file) throws IOException {
         PhotoResponse photoResponse = uploadPhoto(file);
 
-        if(photoResponse.getMessage().equals("Photo not saved") || ObjectUtils.isEmpty(photoResponse)) {
+        if(photoResponse.getStatus().equals("Photo not saved") || ObjectUtils.isEmpty(photoResponse)) {
             return new PhotoResponse("Photo not update in post with id:" + id);
         }
 
@@ -105,6 +106,24 @@ public class PhotoServiceImpl implements IPhotoService {
         publicacionRepository.save(post);
 
         return new PhotoResponse("Photo and Post updated successfully");
+    }
+
+    @Transactional
+    @Override
+    public PhotoResponse updatePostReference(String id, MultipartFile file) throws IOException {
+        PhotoResponse photoResponse = uploadPhoto(file);
+
+        if(photoResponse.getStatus().equals("Photo not saved") || ObjectUtils.isEmpty(photoResponse)) {
+            return new PhotoResponse("Photo not update in post with id:" + id);
+        }
+
+        Post post = postService.getPostById(id);
+
+        post.setPhoto(photoResponse.getMessage());
+
+        postService.savePost(post);
+
+        return new PhotoResponse("Photo and Simplified Post updated successfully");
     }
 
     @Transactional
