@@ -22,3 +22,6 @@ public class PostCreatedEventListener implements ApplicationListener<PostCreated
         return ApplicationListener.super.supportsAsyncExecution();
     }
 }
+
+////funciona correctamente :)
+
