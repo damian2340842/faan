@@ -4,7 +4,7 @@ package com.example.faan.mongo.Controller.secundary.webSocket;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-@ControllerAdvice
+@Deprecated
 public class WebSocketExceptionHandler {
         @MessageExceptionHandler
         public void handleException(Throwable exception) {

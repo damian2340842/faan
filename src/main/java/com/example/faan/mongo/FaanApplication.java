@@ -30,6 +30,7 @@ public class FaanApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FaanApplication.class, args);
+        System.out.println("Hola Mundo");
     }
 
 }

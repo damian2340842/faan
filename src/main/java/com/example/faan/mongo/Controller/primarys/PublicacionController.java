@@ -10,6 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -104,8 +107,8 @@ public class PublicacionController {
     //GUARDAR PUBLICACIONES EN GENERAL ----- SOLO PARA PRUEBAS!!
     @PostMapping(path = "/guardarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
-        try {
+    public ResponseEntity<String> crearPublicacion(@RequestPart("publicacion") Publicacion publicacion, @RequestPart(value = "photo", required = false) MultipartFile photo) throws IOException {
+
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
             }
@@ -115,7 +118,7 @@ public class PublicacionController {
             }
 
 
-            Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
+            Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion, photo);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
 
@@ -123,9 +126,7 @@ public class PublicacionController {
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
             }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al procesar la solicitud");
-        }
+
     }
     ///funciona correctamente
 

@@ -3,6 +3,7 @@ package com.example.faan.mongo.file.controller;
 import com.example.faan.mongo.file.model.entity.Photo;
 import com.example.faan.mongo.file.service.IPhotoService;
 import com.example.faan.mongo.modelos.Usuario;
+import com.example.faan.mongo.modelos.dto.SavePost;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,8 +55,14 @@ public class PhotoController {
     }
 
     @PreAuthorize("isAnonymous()")
+    @RequestMapping(value = "/register-user", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public ResponseEntity<?> registerUserWithPicture(@RequestPart("usuario") Usuario usuario, @RequestPart("photo") MultipartFile photo) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(photoService.registerUserWithPhoto(usuario, photo));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @RequestMapping(value = "/register-post", method = RequestMethod.POST, consumes = {"multipart/form-data"})
-    public ResponseEntity<?> registerPostWithPicture(@RequestPart("usuario") Usuario usuario, @RequestPart("photo") MultipartFile photo) throws IOException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(photoService.registerPostWithPhoto(usuario, photo));
+    public ResponseEntity<?> registerPostWithPicture(@RequestPart("savePost") SavePost savePost, @RequestPart("photo") MultipartFile photo) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(photoService.registerPostWithPhoto(savePost, photo));
     }
 }

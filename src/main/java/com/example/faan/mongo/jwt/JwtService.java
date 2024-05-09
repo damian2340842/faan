@@ -1,11 +1,14 @@
 package com.example.faan.mongo.jwt;
 
+import com.example.faan.mongo.Repository.UsuarioRepository;
+import com.example.faan.mongo.exception.ObjectNotFoundException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +23,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
     @Value("${jwt.secret}")
     public String SECRET_KEY;
+
+    private final UsuarioRepository usuarioRepository;
 
     public String getToken(UserDetails empleado) {
         return getToken(generateExtraClaims(empleado), empleado);
@@ -86,12 +92,14 @@ public class JwtService {
 
     private Map<String, Object> generateExtraClaims(UserDetails user) {
         Map<String, Object> extraClaims = new HashMap<>();
+        String idUser = String.valueOf(usuarioRepository.findByUsername(user.getUsername()).orElseThrow(() -> new ObjectNotFoundException("User not found")).getId());
 
         List<String> roles = user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         extraClaims.put("role", roles);
+        extraClaims.put("userId", idUser);
 
         return extraClaims;
     }

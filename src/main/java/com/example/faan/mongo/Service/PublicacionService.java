@@ -2,16 +2,21 @@ package com.example.faan.mongo.Service;
 
 import com.example.faan.mongo.Repository.PublicacionRepository;
 import com.example.faan.mongo.Repository.UsuarioRepository;
+import com.example.faan.mongo.file.model.dto.PhotoResponse;
+import com.example.faan.mongo.file.service.IPhotoService;
 import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import com.example.faan.mongo.modelos.Usuario;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PublicacionService {
 
     @Autowired
@@ -32,6 +38,8 @@ public class PublicacionService {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    private final IPhotoService photoService;
 
 //    public Publicacion crearPublicacion(Publicacion publicacion1) {
 //        BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
@@ -149,8 +157,10 @@ public class PublicacionService {
 //////////////////
 
     @Transactional
-    public Publicacion crearPublicacion(Publicacion publicacion1) {
+    public Publicacion crearPublicacion(Publicacion publicacion1, MultipartFile photo) throws IOException {
         BigInteger nuevaPublicacionId = counterService.getNextSequence("publicacion_id");
+        PhotoResponse photoResponse = photoService.uploadPhoto(photo);
+
         // Obtener el usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -172,6 +182,7 @@ public class PublicacionService {
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .estadoFavoritos(publicacion1.getEstadoFavoritos())
                 .usuario(usuario)
+                .photo(photoResponse.getMessage())
                 .build();
         return publicacionRepository.save(publicacion);
     }

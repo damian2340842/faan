@@ -37,5 +37,6 @@ public class Publicacion {
     private Photo photo;
     private LocalDateTime fecha_publicacion;
 
-    Usuario usuario;
+    @DBRef
+    private Usuario usuario;
 }

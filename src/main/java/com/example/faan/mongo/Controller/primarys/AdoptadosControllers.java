@@ -11,7 +11,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +43,7 @@ public class AdoptadosControllers {
     ///METODO PARA GUARDAR ADOPTADOS
     @PostMapping(path = "/guardarAdoptados")
     @PreAuthorize("hasAnyRole( 'ADMIN')")
-    public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
+    public ResponseEntity<String> crearPublicacion(@RequestPart("publicacion") Publicacion publicacion, @RequestPart(value = "photo") MultipartFile photo) throws IOException {
         try {
             if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                     .anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
@@ -61,7 +63,7 @@ public class AdoptadosControllers {
             publicacion.setTipoPublicacion(TipoPublicacion.ADOPCION);
             publicacion.setEstadoRescatado(false);
             publicacion.setEstadoFavoritos(false);
-            Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
+            Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion, photo);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
                 return ResponseEntity.status(HttpStatus.CREATED).body("Publicación tipo 'Adopción' creada exitosamente.");

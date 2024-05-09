@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class PerdidosController {
 /// METODO PARA GUARDAR ANIMALES PERDIDOS
     @PostMapping(path = "/guardarPerdidos")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<String> crearPublicacion(@RequestBody Publicacion publicacion) {
+    public ResponseEntity<String> crearPublicacion(@RequestPart("publicacion") Publicacion publicacion, @RequestPart("photo") MultipartFile photo) throws IOException {
         try {
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe.");
@@ -43,7 +44,7 @@ public class PerdidosController {
 
             publicacion.setTipoPublicacion(TipoPublicacion.PERDIDO);
 
-            Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion);
+            Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion, photo);
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
                 return ResponseEntity.status(HttpStatus.CREATED).body("Publicación de tipo perdido creada exitosamente.");

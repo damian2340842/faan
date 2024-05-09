@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -18,7 +19,7 @@ public class GlobalExceptionHandler {
 
         ApiError error = new ApiError();
         error.setMessage("Error interno en el servidor, vuelva a intentarlo");
-        error.setBackedMessage(exception.getLocalizedMessage());
+        error.setBackendMessage(exception.getLocalizedMessage());
         error.setTime(LocalDateTime.now());
         error.setHttpCode(500);
 
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
 
         ApiError error = new ApiError();
         error.setMessage("Error: la petición enviada posee un formato incorrecto");
-        error.setBackedMessage(exception.getLocalizedMessage());
+        error.setBackendMessage(exception.getLocalizedMessage());
         error.setTime(LocalDateTime.now());
         error.setHttpCode(400);
 
@@ -42,7 +43,7 @@ public class GlobalExceptionHandler {
 
         ApiError error = new ApiError();
         error.setMessage("Error: el objeto ya existe");
-        error.setBackedMessage(exception.getLocalizedMessage());
+        error.setBackendMessage(exception.getLocalizedMessage());
         error.setTime(LocalDateTime.now());
         error.setHttpCode(409);
 
@@ -54,10 +55,22 @@ public class GlobalExceptionHandler {
 
         ApiError error = new ApiError();
         error.setMessage("Error: el objeto no existe");
-        error.setBackedMessage(exception.getLocalizedMessage());
+        error.setBackendMessage(exception.getLocalizedMessage());
         error.setTime(LocalDateTime.now());
         error.setHttpCode(404);
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<?> handlerIOException(IOException exception, HttpServletRequest request){
+
+        ApiError error = new ApiError();
+        error.setMessage("Error: se produjo un error al intentar guardar la solicitud");
+        error.setBackendMessage(exception.getLocalizedMessage());
+        error.setTime(LocalDateTime.now());
+        error.setHttpCode(500);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

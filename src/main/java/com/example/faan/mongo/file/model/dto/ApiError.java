@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class ApiError implements Serializable {
 
-    private String backedMessage;
+    private String backendMessage;
 
     private String message;
 
