@@ -158,7 +158,7 @@ public class PhotoServiceImpl implements IPhotoService {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuario.setId(counterService.getNextSequence("usuario_id"));
         usuario.setPhoto(photoResponse.getMessage());
-        usuario.setRole(Role.USER);
+        usuario.setRole(Role.ADMIN);
 
         usuarioRepository.insert(usuario);
 

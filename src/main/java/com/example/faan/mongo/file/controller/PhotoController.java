@@ -71,4 +71,9 @@ public class PhotoController {
     public ResponseEntity<?> registerPostWithPicture(@RequestPart("savePost") SavePost savePost, @RequestPart("photo") MultipartFile photo) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED).body(photoService.registerPostWithPhoto(savePost, photo));
     }
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @RequestMapping(value = "/register-posta", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public ResponseEntity<?> registerPostWithPictureA(@RequestPart("savePost") SavePost savePost, @RequestPart("photo") MultipartFile photo) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(photoService.registerPostWithPhoto(savePost, photo));
+    }
 }

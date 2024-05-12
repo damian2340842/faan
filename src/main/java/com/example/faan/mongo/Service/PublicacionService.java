@@ -163,6 +163,7 @@ public class PublicacionService {
 
         // Obtener el usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         String username = authentication.getName();
         Usuario usuario = usuarioService.findByUsername(username);
 

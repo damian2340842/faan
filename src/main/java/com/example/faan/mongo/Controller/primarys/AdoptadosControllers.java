@@ -1,9 +1,12 @@
 package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Service.PublicacionService;
+import com.example.faan.mongo.modelos.EnumsFijo.Role;
 import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
+import com.example.faan.mongo.modelos.Usuario;
 import jakarta.validation.Valid;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -42,15 +45,11 @@ public class AdoptadosControllers {
 
     ///METODO PARA GUARDAR ADOPTADOS
     @PostMapping(path = "/guardarAdoptados")
-    @PreAuthorize("hasAnyRole( 'ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
+
     public ResponseEntity<String> crearPublicacion(@RequestPart("publicacion") Publicacion publicacion, @RequestPart(value = "photo") MultipartFile photo) throws IOException {
         try {
-            if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("Su usuario no tiene el rol de administrador, por lo que no puedes realizar la acción de creación.");
-            }
-
+          
             if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe.");
             }
@@ -79,15 +78,11 @@ public class AdoptadosControllers {
 
     ///METODO PARA ACTUALIZAR ADOPTADOS POR ID
     @PutMapping("/actualizarAdoptados/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacionadoptados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
 
-            if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("No puedes realizar la acción de ACTUALIZACIÓN porque tu usuario no tiene el rol de administrador.");
-            }
+
             // Verificar si la publicación existe y es del tipo "ENCONTRADO"
             Optional<Publicacion> publicacionEncontradaOptional = publicacionService.obtenerPublicacionPorId(id);
             if (!publicacionEncontradaOptional.isPresent() || !publicacionEncontradaOptional.get().getTipoPublicacion().equals(TipoPublicacion.ADOPCION)) {
@@ -139,14 +134,9 @@ public class AdoptadosControllers {
 
     ///METODO PARA ELIMINAR ADOPCIONES POR ID
     @DeleteMapping(path = "/eliminar/adopciones/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> eliminarPublicacionAdopcion(@PathVariable BigInteger id){
         try {
-            if (!SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body("No puedes realizar la acción de ELIMINACIÓN porque tu usuario no tiene el rol de administrador.");
-            }
 
             Optional<Publicacion> publicacionOptional = publicacionService.obtenerPublicacionPorId(id);
             if (!publicacionOptional.isPresent() || publicacionOptional.get().getTipoPublicacion() != TipoPublicacion.ADOPCION) {
