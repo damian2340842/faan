@@ -18,6 +18,7 @@ import com.example.faan.mongo.modelos.EnumsFijo.Role;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
 import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.Usuario;
+import com.example.faan.mongo.modelos.dto.Author;
 import com.example.faan.mongo.modelos.dto.SavePost;
 import com.example.faan.mongo.modelos.entity.Post;
 import lombok.RequiredArgsConstructor;
@@ -158,7 +159,7 @@ public class PhotoServiceImpl implements IPhotoService {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuario.setId(counterService.getNextSequence("usuario_id"));
         usuario.setPhoto(photoResponse.getMessage());
-        usuario.setRole(Role.ADMIN);
+        usuario.setRole(Role.USER);
 
         usuarioRepository.insert(usuario);
 
@@ -188,6 +189,14 @@ public class PhotoServiceImpl implements IPhotoService {
         postService.savePost(post);
 
         applicationEventPublisher.publishEvent(new PostCreatedEvent(savePost));
+
+        Author author = savePost.getAuthor();
+
+        author.setData(getPhotoToAuthor(author.getName()));
+
+        savePost.setAuthor(author);
+
+        savePost.setData(photoResponse.getMessage().getImage().getData());
 
         return savePost;
     }
@@ -225,5 +234,13 @@ public class PhotoServiceImpl implements IPhotoService {
         if (!user.getRole().equals(Role.ADMIN)) {
             throw new RuntimeException("User not allowed to create adoption post");
         }
+    }
+
+    private byte[] getPhotoToAuthor(String username) {
+        Usuario user = usuarioRepository.findByUsername(username).orElseThrow(() -> new ObjectNotFoundException("User not found"));
+
+        Photo photo = photoRepository.findByImageHash(user.getPhoto().getImageHash());
+
+        return photo.getImage().getData();
     }
 }

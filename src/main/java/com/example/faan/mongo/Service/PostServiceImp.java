@@ -149,8 +149,6 @@ public class PostServiceImp implements IPostService {
     public Page<SavePost> getPostsByUserId(String userId, int pageNumber, int pageSize) {
         Page<Post> post = postRepository.findByAuthorId(userId, PageRequest.of(pageNumber, pageSize));
 
-        System.out.println(post.getContent().stream().map(Post::getAuthor).collect(Collectors.toList()));
-
         return post.map(this::getSavePostFromPost);
     }
 
@@ -216,6 +214,7 @@ public class PostServiceImp implements IPostService {
         savePost.setState(post.getState().toString());
         savePost.setTypePost(post.getTypePost().toString());
         savePost.setAuthor(getAuthorFromPost(post));
+        savePost.setData(getPhotoFromPost(post));
 
         return savePost;
     }
@@ -230,5 +229,9 @@ public class PostServiceImp implements IPostService {
         author.setData(post.getAuthor().getPhoto().getImage().getData());
 
         return author;
+    }
+
+    private byte[] getPhotoFromPost(Post post) {
+        return post.getPhoto().getImage().getData();
     }
 }

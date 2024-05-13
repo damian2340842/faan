@@ -2,6 +2,8 @@ package com.example.faan.mongo.modelos.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class Animal {
 
@@ -13,5 +15,5 @@ public class Animal {
 
     private String gender;
 
-    private String disappearancePlace;
+    private LocalDate date;
 }

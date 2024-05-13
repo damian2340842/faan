@@ -23,4 +23,6 @@ public class SavePost implements Serializable {
     private GeoJsonPoint location;
 
     private String state;
+
+    private byte[] data;
 }
