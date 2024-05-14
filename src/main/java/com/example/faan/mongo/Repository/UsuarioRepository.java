@@ -21,6 +21,28 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 
     public Usuario findByTokenPassword(String tokenPassword);
 
+    /**
+     * Method to check if a user exists by email
+     *
+     * @param email email to check.
+     * @return true if the user exists, false otherwise.
+     */
+    Boolean existsByEmailIgnoreCase(String email);
 
+    /**
+     * Method to check if a user exists by username
+     *
+     * @param username username to check.
+     * @return true if the user exists, false otherwise.
+     */
+    Boolean existsByUsernameIgnoreCase(String username);
+
+    /**
+     * Method to check if a user exists by phone
+     *
+     * @param phone phone to check.
+     * @return true if the user exists, false otherwise.
+     */
+    Boolean existsByTelefono(String phone);
 
 }
