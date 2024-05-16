@@ -12,17 +12,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.example.faan.mongo.modelos.AuthResponse;
-
 
 import java.math.BigInteger;
 import java.util.Optional;
 
-import static com.example.faan.mongo.modelos.EnumsFijo.Role.USER;
-
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class  AuthService {
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;

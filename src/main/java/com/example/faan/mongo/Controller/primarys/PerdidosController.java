@@ -1,9 +1,8 @@
 package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Service.PublicacionService;
-import com.example.faan.mongo.exception.ObjectNotFoundException;
-import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
+import com.example.faan.mongo.modelos.Publicacion;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +29,7 @@ public class PerdidosController {
     }
 
 /// METODO PARA GUARDAR ANIMALES PERDIDOS
+    //Perdidos OK
     @PostMapping(path = "/guardarPerdidos")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestPart("publicacion") Publicacion publicacion, @RequestPart("photo") MultipartFile photo) throws IOException {

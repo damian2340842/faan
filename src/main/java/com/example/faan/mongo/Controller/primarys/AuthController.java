@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,6 +30,7 @@ public class AuthController {
     private final Validacion_Usuario validacionUsuario;
 
     /// METODO PARA INICIAR SESIÓN
+    //Login :) OK
     @PostMapping("/signin")
     public ResponseEntity<Map<String, String>> movilSignIn(@RequestBody LoginRequest loginRequest) {
         try {
@@ -51,65 +51,12 @@ public class AuthController {
         }
     }
 
-    ///METODO PARA REGISTRAR
-    @PostMapping("/register")
-    private ResponseEntity<AuthResponse> register(@RequestBody Usuario usuario) {
-        try {
-            // Aplicar validaciones
-            String nombreError = validacionUsuario.validateNombre("Nombre", usuario.getNombre());
-            if (nombreError != null) {
-                return ResponseEntity.badRequest().body(new AuthResponse(nombreError, null));
-            }
-
-            String apellidoError = validacionUsuario.validateApellido("Apellido", usuario.getApellido());
-            if (apellidoError != null) {
-                return ResponseEntity.badRequest().body(new AuthResponse(apellidoError, null));
-            }
-
-            String usernameError = validacionUsuario.validateUsername("Username", usuario.getUsername());
-            if (usernameError != null) {
-                return ResponseEntity.badRequest().body(new AuthResponse(usernameError, null));
-            }
-
-            String passwordError = validacionUsuario.validatePassword("Contraseña", usuario.getPassword());
-            if (passwordError != null) {
-                return ResponseEntity.badRequest().body(new AuthResponse(passwordError, null));
-            }
-
-            String emailError = validacionUsuario.validateEmail(usuario.getEmail());
-            if (emailError != null) {
-                return ResponseEntity.badRequest().body(new AuthResponse(emailError, null));
-            }
-
-            String direccionError = validacionUsuario.validateDireccion("Dirección", usuario.getDireccion());
-            if (direccionError != null) {
-                return ResponseEntity.badRequest().body(new AuthResponse(direccionError, null));
-            }
-
-            String telefonoError = validacionUsuario.validateTelefono("Teléfono", usuario.getTelefono());
-            if (telefonoError != null) {
-                return ResponseEntity.badRequest().body(new AuthResponse(telefonoError, null));
-            }
-
-            if (authService.isusernameAlreadyRegistered(usuario.getUsername())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new AuthResponse("El nombre de usuario ya está registrado.", usuario.getUsername()));
-            }
-
-            return ResponseEntity.ok(authService.register(usuario));
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new AuthResponse("Error en el registro.", null));
-        }
-    }
-
     /// METODO PARA SALIR
+    //Cerrar Seccion OK
     @PostMapping("/signout")
     public ResponseEntity<String> signOut(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         return ResponseEntity.ok("Sesión cerrada correctamente.");
     }
-
 
 }

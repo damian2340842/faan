@@ -28,6 +28,7 @@ public class EncontradosController {
     }
 
     ///METODO PARA ENLISTAR LOS ENCONTRADOS
+        //Listar Encontrados OK
     @GetMapping("/listar/encontradas")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 
@@ -40,6 +41,7 @@ public class EncontradosController {
 
 
 //// METODO PARA GUARDAR ENCONTRADOS
+    //Guardar OK
     @PostMapping(path = "/guardarEncontrados")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestPart("publicacion") Publicacion publicacion, @RequestPart(value = "photo", required = false) MultipartFile photo) throws IOException {
@@ -70,6 +72,7 @@ public class EncontradosController {
 
 
 ////METODO PARA ACTUALZIAR ENCONTRADOS POR ID
+    //Actualizacion OK
     @PutMapping("/actualizarEncontrados/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacionencontrados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
@@ -125,6 +128,7 @@ public class EncontradosController {
 
 
 ////METODO PARA ELIMINAR ENCONTRADOS POR ID
+    //Eliminar  OK
     @DeleteMapping(path = "/eliminar/encontrados/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> eliminarPublicacionEncontrada(@PathVariable BigInteger id) {

@@ -59,7 +59,7 @@ public class PhotoController {
     public ResponseEntity<?> updatePhotoInUser(@PathVariable String username, @RequestParam("photo") MultipartFile photo) throws IOException {
         return ResponseEntity.status(HttpStatus.OK).body(photoService.updateUserReference(username, photo));
     }
-
+//Registro Principal :)OK
     @PreAuthorize("isAnonymous()")
     @RequestMapping(value = "/register-user", method = RequestMethod.POST, consumes = {"multipart/form-data"})
     public ResponseEntity<?> registerUserWithPicture(@RequestPart("usuario") Usuario usuario, @RequestPart("photo") MultipartFile photo) throws IOException {

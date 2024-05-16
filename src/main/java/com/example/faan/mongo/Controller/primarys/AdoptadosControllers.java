@@ -1,18 +1,13 @@
 package com.example.faan.mongo.Controller.primarys;
 
 import com.example.faan.mongo.Service.PublicacionService;
-import com.example.faan.mongo.modelos.EnumsFijo.Role;
-import com.example.faan.mongo.modelos.Publicacion;
 import com.example.faan.mongo.modelos.EnumsFijo.TipoPublicacion;
-import com.example.faan.mongo.modelos.Usuario;
+import com.example.faan.mongo.modelos.Publicacion;
 import jakarta.validation.Valid;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +39,7 @@ public class AdoptadosControllers {
 
 
     ///METODO PARA GUARDAR ADOPTADOS
+    //Adoptados OK
     @PostMapping(path = "/guardarAdoptados")
     @PreAuthorize("hasRole('ADMIN')")
 
