@@ -76,6 +76,20 @@ public class UsersController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("/{id}")
+    public ResponseEntity<Usuario> getUserById(@PathVariable String id) {
+        Optional<Usuario> usuarioOptional = usuarioService.obtenerUsuarioPorId(id);
+        return usuarioOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(null));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PutMapping("/update-password/{userId}")
+    public ResponseEntity<Boolean> updatePassword(@PathVariable String userId, @RequestParam("password") String password) {
+            return ResponseEntity.ok(usuarioService.updatePassword(userId, password));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/obtenerUser/{username}")
     public ResponseEntity<Usuario> obtenerUsuarioPorUsername(@PathVariable String username) {
         Usuario usuarioOptional = usuarioService.findByUsername(username);
@@ -115,5 +129,23 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ups! Ocurrió un error al eliminar el usuario.");
         }
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/exists-username/{username}")
+    public ResponseEntity<Boolean> existsUsername(@PathVariable String username) {
+        return ResponseEntity.ok(usuarioService.existsByUsernameIgnoreCase(username));
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/exists-email/{email}")
+    public ResponseEntity<Boolean> existsEmail(@PathVariable String email) {
+        return ResponseEntity.ok(usuarioService.existsByEmailIgnoreCase(email));
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/exists-phone/{phone}")
+    public ResponseEntity<Boolean> existsPhone(@PathVariable String phone) {
+        return ResponseEntity.ok(usuarioService.existsByTelefono(phone));
     }
 }

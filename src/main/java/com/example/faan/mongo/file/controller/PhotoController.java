@@ -24,7 +24,7 @@ public class PhotoController {
         this.photoService = photoService;
     }
 
-    @PreAuthorize("isAnonymous()")
+    @PreAuthorize("permitAll()")
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("photo") MultipartFile photo) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED).body(photoService.uploadPhoto(photo));
