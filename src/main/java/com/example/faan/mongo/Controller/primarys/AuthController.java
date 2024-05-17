@@ -52,7 +52,7 @@ public class AuthController {
     }
 
     /// METODO PARA SALIR
-    //Cerrar Seccion OK
+    //Cerrar Secion OK
     @PostMapping("/signout")
     public ResponseEntity<String> signOut(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
