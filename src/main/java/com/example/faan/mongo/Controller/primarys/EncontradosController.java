@@ -29,7 +29,7 @@ public class EncontradosController {
 
     ///METODO PARA ENLISTAR LOS ENCONTRADOS
         //Listar Encontrados OK
-    @GetMapping("/listar/encontradas")
+    @GetMapping("/listar/encontrados")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 
     public ResponseEntity<List<Publicacion>> listarPublicacionesEncontradas() {

@@ -43,6 +43,8 @@ public class PerdidosController {
             }
 
             publicacion.setTipoPublicacion(TipoPublicacion.PERDIDO);
+            publicacion.setEstadoRescatado(false);
+            publicacion.setEstadoFavoritos(false);
 
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion, photo);
             if (nuevaPublicacion != null) {
@@ -59,12 +61,12 @@ public class PerdidosController {
 
 
 // METODO PARA ENLISTAR LOS ANMALES EN ESTADO DE PERDIDO
-    @GetMapping("/listar/perdidos")
-    public ResponseEntity<List<Publicacion>> listarPublicacionesPerdidas() {
-        List<Publicacion> publicacionesPerdidas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
-        List<Publicacion> publicacionesPerdidasFiltradas = publicacionService.publicacionesConEstadoTrue(publicacionesPerdidas);
-        return ResponseEntity.ok(publicacionesPerdidasFiltradas);
-    }
+@GetMapping("/listar/perdidos")
+public ResponseEntity<List<Publicacion>> actualizarPublicacionPerdidos() {
+    List<Publicacion> publicacionesEncontradas = publicacionService.obtenerPublicacionesPorTipo(TipoPublicacion.PERDIDO);
+    List<Publicacion> publicacionesEncontradasFiltradas = publicacionService.publicacionesConEstadoFalse(publicacionesEncontradas);
+    return ResponseEntity.ok(publicacionesEncontradasFiltradas);
+}
     // funciona correctamente.
 
 
