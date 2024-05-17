@@ -1,8 +1,9 @@
 package com.example.faan.mongo.modelos.secundary;
 
 import com.example.faan.mongo.modelos.Usuario;
-import org.springframework.data.annotation.Id;
+import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 @Document(collection = "Mi_Ubicacion")
 public class Mi_Ubicacion {
