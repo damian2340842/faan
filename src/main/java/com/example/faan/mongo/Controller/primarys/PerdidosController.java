@@ -72,7 +72,7 @@ public ResponseEntity<List<Publicacion>> actualizarPublicacionPerdidos() {
 
     ///METODO PARA ACTUALIZAR PERDIDOS CON EL ID
     @PutMapping("/actualizarPerdidos/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> actualizarPublicacionPerdidos(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
             // Verificar si la publicación existe y es del tipo "ENCONTRADO"
@@ -104,8 +104,8 @@ public ResponseEntity<List<Publicacion>> actualizarPublicacionPerdidos() {
             if (publicacion.getFecha() != null) {
                 publicacionExistente.setFecha(publicacion.getFecha());
             }
-            if (publicacion.getUbicacion() != null) {
-                publicacionExistente.setUbicacion(publicacion.getUbicacion());
+            if (publicacion.getLocation() != null) {
+                publicacionExistente.setLocation(publicacion.getLocation());
             }
             Boolean estadoRescatado = publicacion.getEstadoRescatado();
             if (estadoRescatado != null) {
@@ -141,7 +141,8 @@ public ResponseEntity<List<Publicacion>> actualizarPublicacionPerdidos() {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al eliminar la publicación de tipo PERDIDO.");
         }
     }
-    /// funciona correctamente
+    /// funciona correctamente 100/100
+
 
 
 }

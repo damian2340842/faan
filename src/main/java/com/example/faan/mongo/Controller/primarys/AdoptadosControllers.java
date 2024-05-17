@@ -107,8 +107,8 @@ public class AdoptadosControllers {
             if (publicacion.getFecha() != null) {
                 publicacionExistente.setFecha(publicacion.getFecha());
             }
-            if (publicacion.getUbicacion() != null) {
-                publicacionExistente.setUbicacion(publicacion.getUbicacion());
+            if (publicacion.getLocation() != null) {
+                publicacionExistente.setLocation(publicacion.getLocation());
             }
             Boolean estadoRescatado = publicacion.getEstadoRescatado();
             if (estadoRescatado != null) {
@@ -146,6 +146,6 @@ public class AdoptadosControllers {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Se produjo un error al eliminar la publicación de tipo ADOPCIÓN.");
         }
     }
-    ///funciona correctamente
+    ///funciona correctamente 100/100
 
 }

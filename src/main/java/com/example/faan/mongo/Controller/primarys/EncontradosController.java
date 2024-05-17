@@ -38,8 +38,6 @@ public class EncontradosController {
         return ResponseEntity.ok(publicacionesEncontradasFiltradas);
     }
     ///funciona correctamente
-
-
 //// METODO PARA GUARDAR ENCONTRADOS
     //Guardar OK
     @PostMapping(path = "/guardarEncontrados")
@@ -58,6 +56,7 @@ public class EncontradosController {
             publicacion.setEstadoRescatado(false);
             publicacion.setEstadoFavoritos(false);
             Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion, photo);
+
             if (nuevaPublicacion != null) {
                 messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
                 return ResponseEntity.status(HttpStatus.CREATED).body("Publicación de tipo 'encontrado' creada exitosamente.");
@@ -74,7 +73,7 @@ public class EncontradosController {
 ////METODO PARA ACTUALZIAR ENCONTRADOS POR ID
     //Actualizacion OK
     @PutMapping("/actualizarEncontrados/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> actualizarPublicacionencontrados(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
         try {
             // Verificar si la publicación existe y es del tipo "ENCONTRADO"
@@ -106,8 +105,8 @@ public class EncontradosController {
             if (publicacion.getFecha() != null) {
                 publicacionExistente.setFecha(publicacion.getFecha());
             }
-            if (publicacion.getUbicacion() != null) {
-                publicacionExistente.setUbicacion(publicacion.getUbicacion());
+            if (publicacion.getLocation() != null) {
+                publicacionExistente.setLocation(publicacion.getLocation());
             }
             Boolean estadoRescatado = publicacion.getEstadoRescatado();
             if (estadoRescatado != null) {

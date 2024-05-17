@@ -29,7 +29,6 @@ public class PublicacionController {
         this.messagingTemplate = messagingTemplate;
     }
 
-
     //METODO PARA LISTAR PUBLICACIONES GENERAL
     @GetMapping("/listar")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -43,10 +42,9 @@ public class PublicacionController {
     }
     ///funciona correctamente
 
-
-
     // METODO PARA LA LISTA RESCATADOS(ENCONTRADOS Y PERDIDOS)
     @GetMapping("/listar/Rescatados")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> listarPublicacionesRescatados() {
         List<Publicacion> publicacionesRescatadas = publicacionService.listarPublicacionesRescatadas();
         if (publicacionesRescatadas.isEmpty()) {
@@ -56,9 +54,9 @@ public class PublicacionController {
         return ResponseEntity.ok(publicacionesRescatadas);
     }
 
-
     // METODO PARA LA LISTA RESCATADOS(Rescatados y favoritos)
     @GetMapping("/listar/Favoritos")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> listarPublicacionesFavoritos() {
         List<Publicacion> todasLasPublicaciones = publicacionService.obtenerTodasLasPublicaciones();
         List<Publicacion> publicacionesRescatadas = publicacionService.publicacionesConEstadoFavTrue(todasLasPublicaciones);
@@ -70,7 +68,6 @@ public class PublicacionController {
 
         return ResponseEntity.ok(publicacionesRescatadas);
     }
-
 
     //LISTAR TODAS MIS PUBLICACIONES SUBIDAS
     @GetMapping("/MisPublicaciones")
@@ -100,39 +97,33 @@ public class PublicacionController {
         }
     }
 
-
-
-
-
     //GUARDAR PUBLICACIONES EN GENERAL ----- SOLO PARA PRUEBAS!!
     @PostMapping(path = "/guardarPublicaciones")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> crearPublicacion(@RequestPart("publicacion") Publicacion publicacion, @RequestPart(value = "photo", required = false) MultipartFile photo) throws IOException {
 
-            if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
-            }
+        if (publicacionService.obtenerPublicacionPorId(publicacion.getId()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("La publicación ya existe");
+        }
 
-            if (publicacionService.existePublicacionDuplicada(publicacion)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No puede duplicar exactamente la publicacion. Cambie al menos un dato");
-            }
+        if (publicacionService.existePublicacionDuplicada(publicacion)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No puede duplicar exactamente la publicacion. Cambie al menos un dato");
+        }
 
 
-            Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion, photo);
-            if (nuevaPublicacion != null) {
-                messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
+        Publicacion nuevaPublicacion = publicacionService.crearPublicacion(publicacion, photo);
+        if (nuevaPublicacion != null) {
+            messagingTemplate.convertAndSend("/topic/publicaciones", publicacion);
 
-                return ResponseEntity.status(HttpStatus.CREATED).body("Publicación creada exitosamente");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
-            }
+            return ResponseEntity.status(HttpStatus.CREATED).body("Publicación creada exitosamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Hubo un error al crear la publicación");
+        }
 
     }
     ///funciona correctamente
 
-
     //METODO PARA ACTUALIZAR TODO TIPO DE PUBLICACION
-
     @PutMapping("/actualizar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> actualizarPublicacion(@PathVariable BigInteger id, @Valid @RequestBody Publicacion publicacion) {
@@ -145,8 +136,7 @@ public class PublicacionController {
     }
     //funciona correctamente
 
-
-//METODO PARA ELIMINAR POR ID
+    //METODO PARA ELIMINAR POR ID
     @DeleteMapping(path = "/eliminar/{id}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<String> eliminarPublicacion(@PathVariable BigInteger id) {
@@ -165,24 +155,21 @@ public class PublicacionController {
     }
     ///funciona correctamente
 
-
-///METODO PARA BUSCAR POR ID
-@GetMapping("/buscar/{id}")
-public ResponseEntity<?> buscarPublicacionPorId(@PathVariable BigInteger id) {
-    try {
-        Optional<Publicacion> publicacionOpt = publicacionService.obtenerPublicacionPorId(id);
-        if (publicacionOpt.isPresent()) {
-            return ResponseEntity.ok(publicacionOpt.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la publicación con el ID seleccionado.");
+    ///METODO PARA BUSCAR POR ID
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<?> buscarPublicacionPorId(@PathVariable BigInteger id) {
+        try {
+            Optional<Publicacion> publicacionOpt = publicacionService.obtenerPublicacionPorId(id);
+            if (publicacionOpt.isPresent()) {
+                return ResponseEntity.ok(publicacionOpt.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la publicación con el ID seleccionado.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-}
-
     ///funciona correctamente
-
 
     //BUSQUEDA POR NOMBRE, RAZA, FECHA
     @GetMapping("/buscar")
@@ -190,11 +177,9 @@ public ResponseEntity<?> buscarPublicacionPorId(@PathVariable BigInteger id) {
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String raza,
             @RequestParam(required = false) String fecha
-            ){
+    ) {
         List<Publicacion> publicaciones = publicacionService.buscarPublicaciones(nombre, raza, fecha);
         return ResponseEntity.ok(publicaciones);
     }
-
-
 
 }
