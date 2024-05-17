@@ -1,5 +1,6 @@
 package com.example.faan.mongo.modelos.secundary;
 
+import com.example.faan.mongo.modelos.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,9 @@ public class Notificacion {
     @Field("location")
     private Location location;
 
+    @Field("Mi_ubicaion")
+    private Mi_Ubicacion miUbicacion;
+
     // Enum para el estado de la notificación
     public enum EstadoNotificacion {
         ENVIADO,
@@ -51,6 +55,15 @@ public class Notificacion {
     @NoArgsConstructor
     @Data
     public static class Location {
+        private double latitude;
+        private double longitude;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    public static class Mi_Ubicacion {
+        private Usuario userId;
         private double latitude;
         private double longitude;
     }

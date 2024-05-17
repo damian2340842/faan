@@ -4,6 +4,7 @@ import com.example.faan.mongo.modelos.EnumsFijo.Role;
 import com.example.faan.mongo.modelos.Usuario;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
@@ -44,5 +45,8 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
      * @return true if the user exists, false otherwise.
      */
     Boolean existsByTelefono(String phone);
+
+    List<Usuario> findAll();
+
 
 }

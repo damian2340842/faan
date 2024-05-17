@@ -100,4 +100,10 @@ public class UsuarioService {
         return usuarioRepository.existsByTelefono(phone);
     }
 
+    ///
+    public List<Usuario> findAll() {
+        return usuarioRepository.findAll();
+    }
+
+
 }

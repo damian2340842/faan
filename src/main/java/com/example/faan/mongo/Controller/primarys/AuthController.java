@@ -3,13 +3,11 @@ package com.example.faan.mongo.Controller.primarys;
 import com.example.faan.mongo.Repository.UsuarioRepository;
 import com.example.faan.mongo.Service.AuthService;
 import com.example.faan.mongo.Service.CounterService;
-import com.example.faan.mongo.Service.Mi_UbicacionService;
 import com.example.faan.mongo.Service.UsuarioService;
 import com.example.faan.mongo.Validaciones.Validacion_Usuario;
 import com.example.faan.mongo.modelos.AuthResponse;
 import com.example.faan.mongo.modelos.LoginRequest;
 import com.example.faan.mongo.modelos.Usuario;
-import com.example.faan.mongo.modelos.secundary.Mi_Ubicacion;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -63,47 +61,7 @@ public class AuthController {
         return ResponseEntity.ok("Sesión cerrada correctamente.");
     }
 
-    //ubi
-
-    private final Mi_UbicacionService mi_UbicacionService;
-
-    @PostMapping("/guardar")
-    public ResponseEntity<Mi_Ubicacion> guardarUbicacion(@RequestParam double latitude, @RequestParam double longitude) {
-        try {
-            Mi_Ubicacion nuevaUbicacion = mi_UbicacionService.guardarUbicacion(latitude, longitude);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaUbicacion);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
 }
-
-
-
-
-//    @PostMapping("/actualizarUbi")
-//    public ResponseEntity<String> actualizarUbicacion(@RequestBody Mi_Ubicacion ubicacion) {
-//        try {
-//            // Verificar si la ubicación ya existe en la base de datos para el usuario dado
-//            Usuario usuario = ubicacion.getUserId();
-//            if (usuario != null) {
-//                Mi_Ubicacion ubicacionExistente = ubicacionService.obtenerUbicacionPorUsuario(usuario);
-//                if (ubicacionExistente != null) {
-//                    // Si la ubicación ya existe, actualiza sus valores
-//                    ubicacionExistente.setLatitude(ubicacion.getLatitude());
-//                    ubicacionExistente.setLongitude(ubicacion.getLongitude());
-//                    ubicacionService.actualizarUbicacionUsuario(ubicacionExistente);
-//                    return ResponseEntity.ok("Ubicación actualizada correctamente.");
-//                } else {
-//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró una ubicación para este usuario.");
-//                }
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El campo 'userId' es obligatorio.");
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar la ubicación del usuario.");
-//        }
-//    }
 
 
 

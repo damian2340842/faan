@@ -89,7 +89,7 @@ public class PublicacionService {
             publicacion.setSexo(nuevaPublicacion.getSexo());
             publicacion.setDescripcionEspecifica(nuevaPublicacion.getDescripcionEspecifica());
             publicacion.setFecha(nuevaPublicacion.getFecha());
-            publicacion.setUbicacion(nuevaPublicacion.getUbicacion());
+            publicacion.setLocation(nuevaPublicacion.getLocation());
             publicacion.setEstadoRescatado(nuevaPublicacion.getEstadoRescatado());
             publicacion.setEstadoFavoritos(nuevaPublicacion.getEstadoFavoritos());
             // Puedes agregar aquí más campos para actualizar si tienes más campos en el modelo de publicación.
@@ -179,7 +179,7 @@ public class PublicacionService {
                 .tipoPublicacion(publicacion1.getTipoPublicacion())
                 .fecha_publicacion(publicacion1.getFecha_publicacion())
                 .fecha(publicacion1.getFecha())
-                .ubicacion(publicacion1.getUbicacion())
+                .location(publicacion1.getLocation())
                 .estadoRescatado(publicacion1.getEstadoRescatado())
                 .estadoFavoritos(publicacion1.getEstadoFavoritos())
                 .usuario(usuario)
