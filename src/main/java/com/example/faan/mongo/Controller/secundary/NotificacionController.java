@@ -1,60 +1,41 @@
 package com.example.faan.mongo.Controller.secundary;
 
-import com.example.faan.mongo.Service.mongoService.NotificacionService;
-import com.example.faan.mongo.modelos.secundary.Notificacion;
+import com.example.faan.mongo.Service.Mi_UbicacionService;
+import com.example.faan.mongo.Service.mongoService.NotificacionAutomaticaService;
+import com.example.faan.mongo.modelos.secundary.Mi_Ubicacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/notificaciones")
+@RequestMapping("/api/notificaciones")
 public class NotificacionController {
 
+    private final NotificacionAutomaticaService notificacionService;
+    private final Mi_UbicacionService ubicacionService;
+
     @Autowired
-    private NotificacionService notificacionService;
+    public NotificacionController(NotificacionAutomaticaService notificacionService, Mi_UbicacionService ubicacionService) {
+        this.notificacionService = notificacionService;
+        this.ubicacionService = ubicacionService;
+    }
 
-    @PostMapping("/guardar")
-    public ResponseEntity<?> save(@RequestBody Notificacion notificacion) {
+    @PostMapping("/enviar")
+    public ResponseEntity<String> enviarNotificaciones() {
         try {
-            Notificacion savedNotificacion = notificacionService.save(notificacion);
-            return ResponseEntity.status(HttpStatus.CREATED).body("La notificación se ha guardado exitosamente.");
+            notificacionService.verificarNotificaciones();
+            return ResponseEntity.status(HttpStatus.OK).body("Notificaciones enviadas correctamente.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo guardar la notificación. Por favor, inténtelo de nuevo más tarde.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar las notificaciones.");
         }
     }
 
-
-    @GetMapping("/findById/{id}")
-    public ResponseEntity<?> findById2(@PathVariable("id") String id) {
-        try {
-            Notificacion notificacion = notificacionService.findById(id);
-            if (notificacion != null) {
-
-                return ResponseEntity.status(HttpStatus.OK).body(notificacion);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna notificación con el ID: " + id);
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo guardar la notificación. Por favor, inténtelo de nuevo más tarde.");
+    @GetMapping("/todas")
+    public ResponseEntity<List<Mi_Ubicacion>> obtenerTodasLasUbicaciones() {
+        List<Mi_Ubicacion> ubicaciones = ubicacionService.obtenerTodasLasUbicaciones();
+        return ResponseEntity.ok(ubicaciones);
     }
-
-
-    @PutMapping("/updateEstado/{id}")
-    public ResponseEntity<?> updateEstado(@PathVariable("id") String id, @RequestBody Notificacion notificacion) {
-        try {
-            // Verificar si la notificación con el ID proporcionado existe
-            Notificacion notificacionExistente = notificacionService.findById(id);
-            if (notificacionExistente != null) {
-                // Actualizar el estado de la notificación
-                Notificacion notificacionActualizada = notificacionService.update(id, notificacion);
-                return ResponseEntity.status(HttpStatus.OK).body("Notificacion actualizada.");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró ninguna notificación con el ID: " + id);
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se pudo guardar la notificación. Por favor, inténtelo de nuevo más tarde.");
-    }
-
-
 }

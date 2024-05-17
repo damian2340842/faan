@@ -10,4 +10,7 @@ import java.util.List;
 @Repository
 public interface Mi_UbicacionRepository extends MongoRepository<Mi_Ubicacion, String> {
     List<Mi_Ubicacion> findByUserId(String userId);
+    List<Mi_Ubicacion> findAll();
+
+
 }

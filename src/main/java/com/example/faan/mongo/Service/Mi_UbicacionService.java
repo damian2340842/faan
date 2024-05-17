@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 public class Mi_UbicacionService {
@@ -46,6 +48,10 @@ public class Mi_UbicacionService {
 
         // Guardar la ubicación en la base de datos
         return mi_UbicacionRepository.save(ubicacion);
+    }
+
+    public List<Mi_Ubicacion> obtenerTodasLasUbicaciones() {
+        return mi_UbicacionRepository.findAll();
     }
 
 }
